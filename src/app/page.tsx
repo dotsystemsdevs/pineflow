@@ -9,12 +9,12 @@ import { COOKBOOK_PHASES } from "@/components/workflow/cookbook-phases";
 const GITHUB_URL = "https://github.com/dotsystemsdevs/vibe-prompt";
 
 const EXPLORE = [
-  { href: "/workflow", label: "Cookbook", desc: "10-step workflow from idea to shipped, with prompts per recipe." },
-  { href: "/fixes", label: "Fixes", desc: "Field-tested fixes for the things that break when you vibe code at speed." },
-  { href: "/articles", label: "Articles", desc: "Long-form posts with receipts from real shipped apps." },
-  { href: "/awesome", label: "Awesome", desc: "Curated AI coding tools grouped by cookbook stage." },
-  { href: "/built-with", label: "Built with", desc: "Case studies from apps shipped with this workflow." },
-  { href: "/templates", label: "Templates", desc: "AGENTS.md, PRD, architecture, and memory-bank starters." },
+  { href: "/workflow", label: "Cookbook", desc: "Ten recipes from idea to live URL. Prompts and checklists at every step." },
+  { href: "/fixes", label: "Fixes", desc: "What breaks when you vibe code fast, and how to fix it for real." },
+  { href: "/articles", label: "Articles", desc: "Long reads with receipts from apps we actually shipped." },
+  { href: "/awesome", label: "Awesome", desc: "Curated tools, mapped to each stage of the cookbook." },
+  { href: "/built-with", label: "Built with", desc: "Case studies from teams using this workflow in production." },
+  { href: "/templates", label: "Templates", desc: "AGENTS.md, PRD, architecture docs, and memory-bank starters." },
 ] as const;
 
 export default async function HomePage() {
@@ -26,7 +26,7 @@ export default async function HomePage() {
     "@context": "https://schema.org",
     "@type": "WebApplication",
     name: "vibeprompt",
-    description: `The AI build failure database, vibe coding cookbook, and case studies: ${stats.fixes} fixes, a ${recipeCount}-step workflow, and ${stats.apps} shipped apps. Free, open source.`,
+    description: `Open-source vibe coding cookbook: ${stats.fixes} fixes, ${recipeCount} recipes, ${stats.prompts} prompts, and ${stats.apps} shipped app case studies. Free forever.`,
     url: "https://vibeprompt.tech",
     applicationCategory: "DeveloperApplication",
     operatingSystem: "Web",
@@ -42,23 +42,25 @@ export default async function HomePage() {
       <SlideCard className="mx-auto max-w-4xl">
         <div className="px-5 py-8 sm:px-8 sm:py-10 lg:px-10 lg:py-12">
           <SlideHeader
-            partLabel="Free & open source"
+            partLabel="Open source · free forever"
             title="The Vibe Coding Cookbook"
             subtitle="From shower thought to shipped"
-            lede="Build your first real app, idea to live, one recipe at a time. The AI does most of the typing, you make the calls that matter."
+            lede="Ten recipes, idea to live URL. AI handles the boilerplate. You keep product judgment, architecture, and the ship call."
           >
             <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-3">
               <Link href="/workflow" className="btn-primary !rounded-md">
-                Open the cookbook
+                Start the cookbook
                 <span aria-hidden>→</span>
               </Link>
               <Link href="/fixes" className="btn-secondary !rounded-md">
-                Browse the fixes
+                Browse fixes
               </Link>
               <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 text-[13px] text-[color:var(--ink-faded)]">
                 <span><span className="font-semibold tabular-nums text-[color:var(--ink)]">{recipeCount}</span> recipes</span>
                 <span aria-hidden className="h-1 w-1 rounded-full bg-[color:var(--ink-rule)]" />
                 <span><span className="font-semibold tabular-nums text-[color:var(--ink)]">{stats.fixes}</span> fixes</span>
+                <span aria-hidden className="h-1 w-1 rounded-full bg-[color:var(--ink-rule)]" />
+                <span><span className="font-semibold tabular-nums text-[color:var(--ink)]">{stats.prompts}</span> prompts</span>
                 <span aria-hidden className="h-1 w-1 rounded-full bg-[color:var(--ink-rule)]" />
                 <span><span className="font-semibold tabular-nums text-[color:var(--ink)]">{stats.apps}</span> apps shipped</span>
               </div>
@@ -68,17 +70,17 @@ export default async function HomePage() {
           <div className="cookbook-slide-split">
             <div className="space-y-6">
               <section>
-                <h2 className="slide-section-title">What&apos;s happening?</h2>
+                <h2 className="slide-section-title">Who this is for</h2>
                 <p className="mt-3 text-[15px] leading-relaxed text-[color:var(--ink-soft)]">
-                  People who may not write code from scratch but who understand systems architecture, can direct AI agents with precision, and ship production-quality software at unprecedented speed.
+                  You think in systems, not syntax. You steer AI agents with clear intent, catch bad output early, and care about what actually reaches production.
                 </p>
                 <p className="mt-3 text-[15px] leading-relaxed text-[color:var(--ink-soft)]">
-                  vibeprompt bundles the workflow, prompts, templates, fixes, and receipts from {stats.apps} real apps, so you spend less time stuck on the last 20%.
+                  vibeprompt bundles the workflow, prompts, templates, and fixes from {stats.apps} shipped apps, so the last 20% takes hours, not weeks.
                 </p>
               </section>
 
               <section>
-                <h2 className="slide-section-title">The curriculum</h2>
+                <h2 className="slide-section-title">Six phases, ten recipes</h2>
                 <ul className="mt-3 space-y-2 text-[14.5px] leading-relaxed text-[color:var(--ink-soft)]">
                   {COOKBOOK_PHASES.map((phase) => (
                     <li key={phase.name} className="flex gap-2">
@@ -95,9 +97,9 @@ export default async function HomePage() {
 
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
               {[
-                { n: recipeCount, label: "Recipes in the cookbook" },
-                { n: stats.fixes, label: "Fixes, and counting", highlight: true },
-                { n: stats.prompts, label: "Copy-paste prompts" },
+                { n: recipeCount, label: "Cookbook recipes" },
+                { n: stats.fixes, label: "Documented fixes", highlight: true },
+                { n: stats.prompts, label: "Ready-made prompts" },
                 { n: stats.articles, label: "Deep-dive articles" },
               ].map((stat) => (
                 <div
@@ -169,7 +171,7 @@ export default async function HomePage() {
                   rel="noopener noreferrer"
                   className="text-[13px] text-[color:var(--ink-soft)] transition-colors hover:text-[color:var(--accent)]"
                 >
-                  {contributors.length} {contributors.length === 1 ? "person" : "people"} building it in the open →
+                  {contributors.length} {contributors.length === 1 ? "contributor" : "contributors"} on GitHub →
                 </a>
               </div>
             </div>
