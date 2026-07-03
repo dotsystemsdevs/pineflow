@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { BackLink } from "@/components/layout/back-link";
 import { notFound } from "next/navigation";
 import { PageHeader } from "@/components/layout/page-header";
 import { FixActions } from "@/components/fixes/fix-actions";
@@ -72,12 +73,7 @@ export default async function FixPage({ params }: { params: Promise<{ id: string
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
       <div className="page-shell">
-        <Link
-          href="/fixes"
-          className="inline-flex w-fit shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border border-[color:var(--ink-rule)] px-3.5 py-1.5 text-[13px] font-medium text-[color:var(--ink-soft)] transition-colors hover:border-[color:var(--ink-soft)] hover:text-[color:var(--ink)]"
-        >
-          <span aria-hidden>←</span> All fixes
-        </Link>
+        <BackLink href="/fixes" label="All fixes" />
 
         {/* The problem, the failure, framed by the red category kicker */}
         <PageHeader accent="red" kicker={`${categoryLabel} failure`} title={p.title} />

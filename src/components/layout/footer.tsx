@@ -9,9 +9,8 @@ const CURRENT_YEAR = new Date().getFullYear();
 export function Footer() {
   const pathname = usePathname();
 
-  // Home is a one-screen no-scroll layout, and the cookbook (/workflow) owns its
-  // own full-height app layout with a sticky right rail, so neither gets a footer.
-  if (pathname === "/" || pathname === "/workflow") return null;
+  // Home renders its own nav via page.tsx; workflow has phase nav.
+  if (pathname === "/workflow") return null;
 
   return (
     <footer className="shrink-0 border-t border-[color:var(--ink-rule)] bg-[color:var(--page)] text-[color:var(--ink)]">

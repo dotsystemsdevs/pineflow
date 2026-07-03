@@ -3,8 +3,19 @@ import Image from "next/image";
 import { WORKFLOW_STEPS } from "@/lib/workflow-steps";
 import { getSiteStats } from "@/lib/site-stats";
 import { getRepoContributors } from "@/lib/github-repo-contributors";
+import { SlideCard, SlideHeader, SlideRowItem, SlideRowList } from "@/components/layout/slide-ui";
+import { COOKBOOK_PHASES } from "@/components/workflow/cookbook-phases";
 
 const GITHUB_URL = "https://github.com/dotsystemsdevs/vibe-prompt";
+
+const EXPLORE = [
+  { href: "/workflow", label: "Cookbook", desc: "10-step workflow from idea to shipped, with prompts per recipe." },
+  { href: "/fixes", label: "Fixes", desc: "Field-tested fixes for the things that break when you vibe code at speed." },
+  { href: "/articles", label: "Articles", desc: "Long-form posts with receipts from real shipped apps." },
+  { href: "/awesome", label: "Awesome", desc: "Curated AI coding tools grouped by cookbook stage." },
+  { href: "/built-with", label: "Built with", desc: "Case studies from apps shipped with this workflow." },
+  { href: "/templates", label: "Templates", desc: "AGENTS.md, PRD, architecture, and memory-bank starters." },
+] as const;
 
 export default async function HomePage() {
   const [stats, contributors] = await Promise.all([getSiteStats(), getRepoContributors()]);
@@ -28,97 +39,143 @@ export default async function HomePage() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaOrg) }} />
 
-      {/* One screen, no scroll. Hero, then the people who build it in the open. */}
-      <div className="flex w-full flex-col justify-center px-4 py-12 sm:px-6 lg:min-h-full lg:py-16">
-        <div className="mx-auto w-full max-w-3xl text-center animate-in fade-in-0 slide-in-from-bottom-3 duration-700">
-
-          <span className="inline-flex items-center gap-2 rounded-full border border-[color:var(--ink-rule)] bg-[color:var(--paper)] py-1 pl-1 pr-3 shadow-[0_1px_2px_rgba(0,0,0,0.04)]">
-            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[color:var(--accent)] text-[9px] font-bold tracking-tight text-white">vp</span>
-            <span className="text-[13px] font-medium text-[color:var(--ink)]">vibeprompt</span>
-            <span aria-hidden className="h-3 w-px bg-[color:var(--ink-rule)]" />
-            <span className="text-[12px] text-[color:var(--ink-faded)]">free &amp; open source</span>
-          </span>
-
-          <h1 className="mx-auto mt-8 max-w-[14ch] text-balance font-bold tracking-[-0.045em] leading-[1.0] text-[clamp(2.6rem,5vw+0.8rem,4.4rem)]">
-            <span className="text-[color:var(--ink-faded)]">AI gets you 80% there.</span>{" "}
-            <span className="text-[color:var(--ink)]">We get you shipped.</span>
-          </h1>
-
-          <p className="text-body-lg mx-auto mt-5 max-w-lg text-pretty text-[color:var(--ink-soft)]">
-            The cookbook to take an app from idea to live, plus the fix for everything that broke shipping {stats.apps} real apps.
-          </p>
-
-          <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
-            <Link
-              href="/workflow"
-              className="group inline-flex items-center gap-2 rounded-md bg-[color:var(--ink)] px-6 py-3 text-[14px] font-medium text-[color:var(--paper)] shadow-[0_4px_14px_-6px_rgba(0,0,0,0.4)] transition-all duration-200 hover:-translate-y-0.5 hover:opacity-90 active:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--accent-ring)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--background)]"
-            >
-              Open the cookbook
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden className="transition-transform duration-200 group-hover:translate-x-0.5">
-                <path d="M5 12h14" />
-                <path d="M13 6l6 6-6 6" />
-              </svg>
-            </Link>
-            <Link
-              href="/fixes"
-              className="inline-flex items-center rounded-md border border-[color:var(--ink-rule)] bg-[color:var(--paper)] px-6 py-3 text-[14px] font-medium text-[color:var(--ink)] transition-all duration-200 hover:-translate-y-0.5 hover:border-[color:var(--ink-soft)] hover:bg-[color:var(--paper-soft)] active:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--accent-ring)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--background)]"
-            >
-              Browse the fixes
-            </Link>
-          </div>
-
-          {/* Proof in numbers, moxa-style square stat boxes */}
-          <div className="mx-auto mt-12 grid w-full max-w-2xl grid-cols-3 divide-x divide-[color:var(--ink-rule)] border border-[color:var(--ink-rule)] text-center">
-            <div className="px-3 py-6">
-              <div className="font-bold tracking-tight text-[color:var(--ink)] text-[clamp(1.6rem,3vw,2.2rem)]">{recipeCount}</div>
-              <div className="mt-1.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-[color:var(--ink-faded)]">Recipes in the cookbook</div>
-            </div>
-            <div className="bg-[color:var(--ink)] px-3 py-6">
-              <div className="font-bold tracking-tight text-[color:var(--paper)] text-[clamp(1.6rem,3vw,2.2rem)]">{stats.fixes}</div>
-              <div className="mt-1.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-white/60">Fixes, and counting</div>
-            </div>
-            <div className="px-3 py-6">
-              <div className="font-bold tracking-tight text-[color:var(--ink)] text-[clamp(1.6rem,3vw,2.2rem)]">{stats.apps}</div>
-              <div className="mt-1.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-[color:var(--ink-faded)]">Real apps shipped</div>
-            </div>
-          </div>
-
-          {/* Built in the open, the real people behind it, not just one. */}
-          {shown.length > 0 && (
-            <div className="mt-14 flex flex-col items-center gap-3.5 animate-in fade-in-0 duration-700 [animation-delay:200ms] [animation-fill-mode:both]">
-              <span className="text-label">Built in the open</span>
-              <div className="flex items-center justify-center -space-x-2">
-                {shown.map((c) => (
-                  <a
-                    key={c.login}
-                    href={c.profileUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    title={c.login}
-                    className="relative transition-transform duration-200 hover:z-10 hover:-translate-y-0.5"
-                  >
-                    <Image
-                      src={c.avatarUrl}
-                      alt={c.login}
-                      width={36}
-                      height={36}
-                      className="h-9 w-9 rounded-full border-2 border-[color:var(--background)] bg-[color:var(--paper-soft)]"
-                    />
-                  </a>
-                ))}
+      <SlideCard className="mx-auto max-w-4xl">
+        <div className="px-5 py-8 sm:px-8 sm:py-10 lg:px-10 lg:py-12">
+          <SlideHeader
+            partLabel="Free & open source"
+            title="The Vibe Coding Cookbook"
+            subtitle="From shower thought to shipped"
+            lede="Build your first real app, idea to live, one recipe at a time. The AI does most of the typing, you make the calls that matter."
+          >
+            <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-3">
+              <Link href="/workflow" className="btn-primary !rounded-md">
+                Open the cookbook
+                <span aria-hidden>→</span>
+              </Link>
+              <Link href="/fixes" className="btn-secondary !rounded-md">
+                Browse the fixes
+              </Link>
+              <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 text-[13px] text-[color:var(--ink-faded)]">
+                <span><span className="font-semibold tabular-nums text-[color:var(--ink)]">{recipeCount}</span> recipes</span>
+                <span aria-hidden className="h-1 w-1 rounded-full bg-[color:var(--ink-rule)]" />
+                <span><span className="font-semibold tabular-nums text-[color:var(--ink)]">{stats.fixes}</span> fixes</span>
+                <span aria-hidden className="h-1 w-1 rounded-full bg-[color:var(--ink-rule)]" />
+                <span><span className="font-semibold tabular-nums text-[color:var(--ink)]">{stats.apps}</span> apps shipped</span>
               </div>
-              <a
-                href={`${GITHUB_URL}/graphs/contributors`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-meta transition-colors hover:text-[color:var(--ink)]"
-              >
-                {contributors.length} {contributors.length === 1 ? "person" : "people"} building it in the open. Join them →
-              </a>
+            </div>
+          </SlideHeader>
+
+          <div className="cookbook-slide-split">
+            <div className="space-y-6">
+              <section>
+                <h2 className="slide-section-title">What&apos;s happening?</h2>
+                <p className="mt-3 text-[15px] leading-relaxed text-[color:var(--ink-soft)]">
+                  People who may not write code from scratch but who understand systems architecture, can direct AI agents with precision, and ship production-quality software at unprecedented speed.
+                </p>
+                <p className="mt-3 text-[15px] leading-relaxed text-[color:var(--ink-soft)]">
+                  vibeprompt bundles the workflow, prompts, templates, fixes, and receipts from {stats.apps} real apps, so you spend less time stuck on the last 20%.
+                </p>
+              </section>
+
+              <section>
+                <h2 className="slide-section-title">The curriculum</h2>
+                <ul className="mt-3 space-y-2 text-[14.5px] leading-relaxed text-[color:var(--ink-soft)]">
+                  {COOKBOOK_PHASES.map((phase) => (
+                    <li key={phase.name} className="flex gap-2">
+                      <span aria-hidden className="shrink-0 text-[color:var(--accent)]">•</span>
+                      <span>
+                        <span className="font-semibold text-[color:var(--ink)]">{phase.name}</span>
+                        , {phase.steps.length} {phase.steps.length === 1 ? "recipe" : "recipes"}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            </div>
+
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
+              {[
+                { n: recipeCount, label: "Recipes in the cookbook" },
+                { n: stats.fixes, label: "Fixes, and counting", highlight: true },
+                { n: stats.prompts, label: "Copy-paste prompts" },
+                { n: stats.articles, label: "Deep-dive articles" },
+              ].map((stat) => (
+                <div
+                  key={stat.label}
+                  className={`rounded-md border border-[color:var(--ink-rule)] px-4 py-5 text-center ${
+                    stat.highlight ? "bg-[color:var(--ink)] text-[color:var(--paper)]" : "bg-[color:var(--paper)]"
+                  }`}
+                >
+                  <div className={`font-bold tracking-tight text-[clamp(1.5rem,2.5vw,2rem)] ${stat.highlight ? "" : "text-[color:var(--ink)]"}`}>
+                    {stat.n}
+                  </div>
+                  <div className={`mt-1.5 text-[10px] font-semibold uppercase tracking-[0.12em] ${stat.highlight ? "text-white/60" : "text-[color:var(--ink-faded)]"}`}>
+                    {stat.label}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <section className="mt-10">
+            <h2 className="slide-section-title">Explore</h2>
+            <div className="mt-4">
+            <SlideRowList>
+              {EXPLORE.map((item) => (
+                <SlideRowItem key={item.href}>
+                  <Link
+                    href={item.href}
+                    className="group flex items-start gap-3 px-4 py-3.5 transition-colors hover:bg-[color:var(--sidebar-hover)]"
+                  >
+                    <span className="min-w-0 flex-1">
+                      <span className="text-[14px] font-semibold text-[color:var(--ink)] group-hover:text-[color:var(--accent)]">{item.label}</span>
+                      <span className="mt-0.5 block text-[13px] leading-snug text-[color:var(--ink-soft)]">{item.desc}</span>
+                    </span>
+                    <span aria-hidden className="shrink-0 pt-0.5 text-[color:var(--ink-faded)] transition-transform group-hover:translate-x-0.5">→</span>
+                  </Link>
+                </SlideRowItem>
+              ))}
+            </SlideRowList>
+            </div>
+          </section>
+
+          {shown.length > 0 && (
+            <div className="mt-10 flex flex-col items-start gap-3 border-t border-[color:var(--ink-rule)] pt-8 sm:flex-row sm:items-center sm:justify-between">
+              <span className="text-label">Built in the open</span>
+              <div className="flex flex-wrap items-center gap-3">
+                <div className="flex items-center -space-x-2">
+                  {shown.map((c) => (
+                    <a
+                      key={c.login}
+                      href={c.profileUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      title={c.login}
+                      className="relative transition-transform duration-200 hover:z-10 hover:-translate-y-0.5"
+                    >
+                      <Image
+                        src={c.avatarUrl}
+                        alt={c.login}
+                        width={32}
+                        height={32}
+                        className="h-8 w-8 rounded-full border-2 border-[color:var(--paper)] bg-[color:var(--paper-soft)]"
+                      />
+                    </a>
+                  ))}
+                </div>
+                <a
+                  href={`${GITHUB_URL}/graphs/contributors`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[13px] text-[color:var(--ink-soft)] transition-colors hover:text-[color:var(--accent)]"
+                >
+                  {contributors.length} {contributors.length === 1 ? "person" : "people"} building it in the open →
+                </a>
+              </div>
             </div>
           )}
         </div>
-      </div>
+      </SlideCard>
     </>
   );
 }

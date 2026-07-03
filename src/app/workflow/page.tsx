@@ -4,6 +4,8 @@ import { WORKFLOW_PAGE_STEPS as STEPS } from "@/lib/workflow-data";
 import { WORKFLOW_RELATED } from "@/lib/workflow-related";
 import { getAllArticles } from "@/lib/articles";
 import { LIST_PROBLEMS } from "@/lib/list-problems";
+import { getSiteStats } from "@/lib/site-stats";
+import { getRepoContributors } from "@/lib/github-repo-contributors";
 
 export const metadata: Metadata = {
   title: "The Vibe Coding Workflow, 10 steps from idea to shipped, with prompts and fixes",
@@ -21,7 +23,13 @@ export const metadata: Metadata = {
 };
 
 export default async function WorkflowPage() {
-  const allArticles = await getAllArticles();
+  // The cookbook is the site landing now, so the intro pulls the same social
+  // proof the old home hero showed (apps shipped, fixes, who builds it).
+  const [allArticles, stats, contributors] = await Promise.all([
+    getAllArticles(),
+    getSiteStats(),
+    getRepoContributors(),
+  ]);
   // Only ship what the rail actually renders (title + id/slug). The full fix
   // answers live on /fixes/[id]; sending them here just bloats the page.
   const relatedByStep: Record<string, CookbookRelated> = {};
@@ -51,7 +59,7 @@ export default async function WorkflowPage() {
     // Full-bleed: the cookbook owns its own layout so the Course content rail
     // can sit flush against the right edge, mirroring the left app sidebar.
     <div className="cookbook-paper">
-      <WorkflowCookbook steps={STEPS} relatedByStep={relatedByStep} articleImages={articleImages} />
+      <WorkflowCookbook steps={STEPS} relatedByStep={relatedByStep} articleImages={articleImages} stats={stats} contributors={contributors} />
     </div>
   );
 }

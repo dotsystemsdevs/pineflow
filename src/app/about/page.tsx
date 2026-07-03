@@ -50,7 +50,7 @@ export default function AboutPage() {
           {/* What it is */}
           <section>
             <h2 className="section-title flex items-center gap-2.5">
-              <span aria-hidden className="text-[22px] leading-none">📦</span>
+              <span aria-hidden className="emoji-lg">📦</span>
               What it is
             </h2>
             <p className="mt-3 text-body-lg">
@@ -67,7 +67,7 @@ export default function AboutPage() {
                   key={f.title}
                   className="vp-card vp-fill vp-card-tight flex items-start gap-3"
                 >
-                  <span aria-hidden className="shrink-0 text-[18px] leading-none mt-0.5">{f.emoji}</span>
+                  <span aria-hidden className="emoji-md shrink-0 mt-0.5">{f.emoji}</span>
                   <div className="min-w-0">
                     <p className="text-body font-semibold text-[color:var(--ink)]">{f.title}</p>
                     <p className="text-body mt-0.5">{f.desc}</p>
@@ -86,7 +86,7 @@ export default function AboutPage() {
           {/* Contact */}
           <section>
             <h2 className="section-title flex items-center gap-2.5">
-              <span aria-hidden className="text-[22px] leading-none">✉️</span>
+              <span aria-hidden className="emoji-lg">✉️</span>
               Contact
             </h2>
             <p className="mt-3 text-body-lg">

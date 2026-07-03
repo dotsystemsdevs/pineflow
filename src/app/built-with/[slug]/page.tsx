@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { BackLink } from "@/components/layout/back-link";
 import { notFound } from "next/navigation";
 import { PageHeader } from "@/components/layout/page-header";
 import {
@@ -71,9 +72,7 @@ export default async function ProjectPostmortem({ params }: { params: Promise<{ 
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
       <div className="page-shell">
-        <Link href="/built-with" className="btn-ghost">
-          ← All projects
-        </Link>
+        <BackLink href="/built-with" label="All projects" />
 
         <PageHeader accent="blue" kicker="Built with vibeprompt" title={p.name}>
           <div className="mt-3 flex items-center gap-3">

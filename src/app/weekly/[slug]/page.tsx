@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { BackLink } from "@/components/layout/back-link";
 import { notFound } from "next/navigation";
 import { PageHeader } from "@/components/layout/page-header";
 import { WeeklyFixLink } from "@/components/fixes/weekly-fix-link";
@@ -81,9 +82,7 @@ export default async function WeeklyIssuePage({ params }: { params: Promise<{ sl
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
       <div className="page-shell">
-        <Link href="/weekly" className="btn-ghost">
-          ← All issues
-        </Link>
+        <BackLink href="/weekly" label="All issues" />
 
         <PageHeader accent="purple" kicker="The Weekly Fix" title={issue.title}>
           <div className="text-meta mt-3 flex flex-wrap items-center gap-2">
