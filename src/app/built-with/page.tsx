@@ -49,7 +49,7 @@ export default function BuiltWithPage() {
                         alt=""
                         width={64}
                         height={64}
-                        className="h-16 w-16 rounded-xl object-contain transition-transform duration-300 group-hover:scale-[1.05]"
+                        className="h-16 w-16 rounded-lg object-contain transition-transform duration-300 group-hover:scale-[1.05]"
                       />
                     </Link>
 

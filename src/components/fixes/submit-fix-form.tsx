@@ -38,6 +38,37 @@ function FieldError({ msg }: { msg?: string }) {
   );
 }
 
+/** One toggle chip, shared by the category (single, solid) and tool (multi,
+ *  soft) selectors so the markup isn't copy-pasted. */
+function ToggleChip({
+  active,
+  solid,
+  onClick,
+  children,
+}: {
+  active: boolean;
+  solid?: boolean;
+  onClick: () => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-pressed={active}
+      className={`rounded-md border px-3 py-1.5 text-[12.5px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--accent-ring)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--background)] ${
+        active
+          ? solid
+            ? "border-[color:var(--accent)] bg-[color:var(--accent)] text-white"
+            : "border-[color:var(--accent)] bg-[color:var(--accent-soft)] text-[color:var(--accent)]"
+          : "border-[color:var(--ink-rule)] text-[color:var(--ink-soft)] hover:border-[color:var(--ink-soft)] hover:text-[color:var(--ink)]"
+      }`}
+    >
+      {children}
+    </button>
+  );
+}
+
 export function SubmitFixForm() {
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState<ListCategory | "">("");
@@ -100,7 +131,7 @@ export function SubmitFixForm() {
     return (
       <div className="space-y-6">
         <div className="vp-card vp-fill vp-card-lg">
-          <div aria-hidden className="text-[28px] leading-none">🎉</div>
+          <div aria-hidden className="emoji-xl">🎉</div>
           <h2 className="section-title mt-3">Fix submitted for review.</h2>
           <p className="text-body mt-2 max-w-lg">
             Thank you. We read every submission and publish the useful ones with your attribution. The next builder
@@ -159,24 +190,11 @@ export function SubmitFixForm() {
       <div>
         <Label htmlFor="sf-category">Category</Label>
         <div id="sf-category" className="flex flex-wrap gap-2">
-          {LIST_CATEGORIES.map((c) => {
-            const active = category === c;
-            return (
-              <button
-                key={c}
-                type="button"
-                onClick={() => setCategory(c)}
-                aria-pressed={active}
-                className={`rounded-md border px-3 py-1.5 text-[12.5px] font-medium transition-colors ${
-                  active
-                    ? "border-[color:var(--accent)] bg-[color:var(--accent)] text-white"
-                    : "border-[color:var(--ink-rule)] text-[color:var(--ink-soft)] hover:border-[color:var(--ink-soft)] hover:text-[color:var(--ink)]"
-                }`}
-              >
-                {LIST_CATEGORY_LABEL[c]}
-              </button>
-            );
-          })}
+          {LIST_CATEGORIES.map((c) => (
+            <ToggleChip key={c} active={category === c} solid onClick={() => setCategory(c)}>
+              {LIST_CATEGORY_LABEL[c]}
+            </ToggleChip>
+          ))}
         </div>
         <FieldError msg={fields.category} />
       </div>
@@ -217,24 +235,11 @@ export function SubmitFixForm() {
           Tools involved
         </Label>
         <div id="sf-tools" className="flex flex-wrap gap-2">
-          {TOOLS.map((t) => {
-            const active = tools.includes(t);
-            return (
-              <button
-                key={t}
-                type="button"
-                onClick={() => toggleTool(t)}
-                aria-pressed={active}
-                className={`rounded-md border px-3 py-1.5 text-[12.5px] font-medium transition-colors ${
-                  active
-                    ? "border-[color:var(--accent)] bg-[color:var(--accent-soft)] text-[color:var(--accent)]"
-                    : "border-[color:var(--ink-rule)] text-[color:var(--ink-soft)] hover:border-[color:var(--ink-soft)] hover:text-[color:var(--ink)]"
-                }`}
-              >
-                {t}
-              </button>
-            );
-          })}
+          {TOOLS.map((t) => (
+            <ToggleChip key={t} active={tools.includes(t)} onClick={() => toggleTool(t)}>
+              {t}
+            </ToggleChip>
+          ))}
         </div>
       </div>
 

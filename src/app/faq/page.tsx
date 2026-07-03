@@ -151,7 +151,7 @@ export default async function FAQPage() {
           {groups.map((group) => (
             <section key={group.title}>
               <h2 className="section-title flex items-center gap-2.5">
-                <span aria-hidden className="text-[22px] leading-none">{group.emoji}</span>
+                <span aria-hidden className="emoji-lg">{group.emoji}</span>
                 {group.title}
               </h2>
               <div className="mt-1">
@@ -183,7 +183,7 @@ export default async function FAQPage() {
 
         {/* Notion-style callout */}
         <div className="vp-card vp-fill vp-card-tight mt-12 flex items-start gap-3">
-          <span aria-hidden className="text-[18px] leading-none mt-0.5">💡</span>
+          <span aria-hidden className="emoji-md mt-0.5">💡</span>
           <p className="text-body">
             Missing a question?{" "}
             <a

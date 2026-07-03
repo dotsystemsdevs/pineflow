@@ -92,7 +92,7 @@ export function Navbar() {
   }, []);
 
   return (
-    <header className="lg:hidden sticky top-0 z-40 h-10 shrink-0 border-b border-[color:var(--ink-rule)] bg-[color:var(--page)]/85 backdrop-blur-md">
+    <header className="lg:hidden sticky top-0 z-40 h-10 shrink-0 border-b border-[color:var(--ink-rule)] bg-[color:var(--page)]/90 backdrop-blur-md">
       <div className="flex h-full items-center px-3 sm:px-4 gap-2">
 
         {/* Mobile menu trigger */}

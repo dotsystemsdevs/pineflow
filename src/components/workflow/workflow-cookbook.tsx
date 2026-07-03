@@ -5,27 +5,40 @@ import { useEffect, useState, type CSSProperties } from "react";
 import type { StepData, TaskItem, LearnBlock } from "./workflow-stepper";
 import { LessonVideo, youtubeThumb, type Lesson } from "./lesson-video";
 import { CourseContentRail } from "./course-content-rail";
-import { CourseIntro } from "./course-intro";
+import { COOKBOOK_PHASES, CourseIntro } from "./course-intro";
+import { SlideCard, SlideHeader, SlideMeta, SlidePager, SlideRowItem, SlideRowList, SlideSubnav } from "@/components/layout/slide-ui";
 import { isLearnHeading, lessonsForStep } from "./cookbook-helpers";
+import type { SiteStats } from "@/lib/site-stats";
+import type { PromptContributor } from "@/lib/github-prompt-contributor";
 
 const STORAGE_KEY = "vibeprompt-tasks-v1";
+const HINT_KEY = "vibeprompt-desktop-hint";
 
+// Inline markup for prose and task text: `code`, **bold**, and *italic*, so
+// content can pull the eye to the words that matter.
 function InlineCode({ text }: { text: string }) {
-  const parts = text.split(/(`[^`]+`)/g);
+  const parts = text.split(/(`[^`]+`|\*\*[^*]+\*\*|\*[^*]+\*)/g);
   return (
     <>
-      {parts.map((part, i) =>
-        part.startsWith("`") && part.endsWith("`") ? (
-          <code
-            key={i}
-            className="rounded-sm border border-[color:var(--ink-rule)] vp-fill px-1 font-mono text-[0.85em] text-[color:var(--accent)]"
-          >
-            {part.slice(1, -1)}
-          </code>
-        ) : (
-          <span key={i}>{part}</span>
-        )
-      )}
+      {parts.map((part, i) => {
+        if (part.startsWith("`") && part.endsWith("`")) {
+          return (
+            <code
+              key={i}
+              className="rounded-sm border border-[color:var(--ink-rule)] vp-fill px-1 font-mono text-[0.85em] text-[color:var(--accent)]"
+            >
+              {part.slice(1, -1)}
+            </code>
+          );
+        }
+        if (part.length > 4 && part.startsWith("**") && part.endsWith("**")) {
+          return <strong key={i} className="font-semibold text-[color:var(--ink)]">{part.slice(2, -2)}</strong>;
+        }
+        if (part.length > 2 && part.startsWith("*") && part.endsWith("*")) {
+          return <em key={i}>{part.slice(1, -1)}</em>;
+        }
+        return <span key={i}>{part}</span>;
+      })}
     </>
   );
 }
@@ -64,73 +77,49 @@ export type CookbookRelated = {
 };
 
 type RecipeTab = "learn" | "task" | "faq";
-const RECIPE_TABS: [RecipeTab, string][] = [
+const RECIPE_TABS: readonly (readonly [RecipeTab, string])[] = [
   ["learn", "Learn"],
   ["task", "Task"],
   ["faq", "FAQ"],
 ];
 
-// Phase label per recipe number, for the hero kicker. Matches the curriculum
-// folders (Set up / Plan & design / Build / Ship / Grow).
-const PHASE_NAME: Record<string, string> = {
-  "00": "Set up",
-  "01": "Plan & design", "02": "Plan & design", "03": "Plan & design", "04": "Plan & design",
-  "05": "Build", "06": "Build",
-  "07": "Ship", "08": "Ship",
-  "09": "Grow",
-};
-
-// A color per phase, so each recipe's hero band gets its own identity.
-const PHASE_TINT: Record<string, { color: string; soft: string }> = {
-  "00": { color: "#3B6FE0", soft: "rgba(59,111,224,0.12)" },
-  "01": { color: "#7C5CFC", soft: "rgba(124,92,252,0.12)" },
-  "02": { color: "#7C5CFC", soft: "rgba(124,92,252,0.12)" },
-  "03": { color: "#7C5CFC", soft: "rgba(124,92,252,0.12)" },
-  "04": { color: "#7C5CFC", soft: "rgba(124,92,252,0.12)" },
-  "05": { color: "#5B5BF5", soft: "rgba(91,91,245,0.12)" },
-  "06": { color: "#5B5BF5", soft: "rgba(91,91,245,0.12)" },
-  "07": { color: "#12A150", soft: "rgba(18,161,80,0.12)" },
-  "08": { color: "#12A150", soft: "rgba(18,161,80,0.12)" },
-  "09": { color: "#F97316", soft: "rgba(249,115,22,0.12)" },
-};
-
-// A line icon per Learn section, matched on the heading's wording (icons, not emojis).
-function sectionIcon(heading: string) {
-  const k = heading.toLowerCase();
-  if (k.includes("aim")) return <><circle cx="12" cy="12" r="9" /><circle cx="12" cy="12" r="4.5" /><circle cx="12" cy="12" r="1" fill="currentColor" stroke="none" /></>;
-  if (k.includes("no idea") || k.includes("find")) return <><circle cx="11" cy="11" r="7" /><line x1="21" y1="21" x2="16.5" y2="16.5" /></>;
-  if (k.includes("what")) return <><path d="M9 18h6" /><path d="M10 22h4" /><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.1h6c0-.8.4-1.6 1-2.1A7 7 0 0 0 12 2z" /></>;
-  if (k.includes("how") || k.includes("set it up") || k.includes("run it") || k.includes("choose") || k.includes("write it")) return <path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18v3h3l6.3-6.3a4 4 0 0 0 5.4-5.4l-2.7 2.7-2-2 2.7-2.7z" />;
-  if (k.includes("wrong") || k.includes("trap") || k.includes("avoid") || k.includes("mistake")) return <><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z" /><line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" /></>;
-  if (k.includes("start from") || k.includes("prd")) return <><path d="M14 3v5h5" /><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /></>;
-  if (k.includes("deeper") || k.includes("prompt") || k.includes("diff") || k.includes("session")) return <><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" /><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" /></>;
-  return <><circle cx="12" cy="12" r="9" /><path d="M12 8v4l2.5 2.5" /></>;
+function phaseForStep(stepId: string): string | null {
+  if (!/^\d+$/.test(stepId)) return null;
+  return COOKBOOK_PHASES.find((p) => p.steps.includes(stepId))?.name ?? null;
 }
 
-// A line icon per recipe tab.
-function tabIcon(key: RecipeTab) {
-  if (key === "learn") return <><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" /><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" /></>;
-  if (key === "task") return <><path d="M9 11l3 3L22 4" /><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" /></>;
-  return <><circle cx="12" cy="12" r="9" /><path d="M9.6 9.5a2.5 2.5 0 0 1 4.9.7c0 1.7-2.5 2-2.5 2.3" /><path d="M12 16.5h.01" /></>;
+function phasePartLabel(stepId: string): string | undefined {
+  const phase = phaseForStep(stepId);
+  if (!phase) return undefined;
+  const idx = COOKBOOK_PHASES.findIndex((p) => p.name === phase);
+  return `Part ${idx + 1} · ${phase}`;
 }
+
 
 interface WorkflowCookbookProps {
   steps: StepData[];
   relatedByStep?: Record<string, CookbookRelated>;
   articleImages?: Record<string, { src: string; alt: string }>;
+  stats?: SiteStats | null;
+  contributors?: PromptContributor[];
 }
 
-export function WorkflowCookbook({ steps, relatedByStep, articleImages }: WorkflowCookbookProps) {
+export function WorkflowCookbook({ steps, relatedByStep, articleImages, stats, contributors }: WorkflowCookbookProps) {
   const [activeStep, setActiveStep] = useState<string>(steps[0]?.step ?? "intro");
   const [checked, setChecked] = useState<Record<string, boolean>>({});
   const [mounted, setMounted] = useState(false);
   // Which lesson plays in the top player (a per-recipe playlist).
   const [lessonIdx, setLessonIdx] = useState(0);
   const [recipeTab, setRecipeTab] = useState<RecipeTab>("learn");
+  // Dismiss state for the "best on desktop" hint shown below the lg breakpoint.
+  const [hintDismissed, setHintDismissed] = useState(false);
 
   // Load progress from localStorage
   useEffect(() => {
     setMounted(true);
+    try {
+      setHintDismissed(localStorage.getItem(HINT_KEY) === "1");
+    } catch {}
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
       setChecked(raw ? (JSON.parse(raw) as Record<string, boolean>) : {});
@@ -173,6 +162,13 @@ export function WorkflowCookbook({ steps, relatedByStep, articleImages }: Workfl
       window.dispatchEvent(new HashChangeEvent("hashchange"));
     }
     window.scrollTo({ top: 0, behavior: "instant" });
+  }
+
+  function dismissHint() {
+    setHintDismissed(true);
+    try {
+      localStorage.setItem(HINT_KEY, "1");
+    } catch {}
   }
 
   function toggle(key: string) {
@@ -236,7 +232,8 @@ export function WorkflowCookbook({ steps, relatedByStep, articleImages }: Workfl
   const stepFinished = mounted && activeItems.length > 0 && totalDone === activeItems.length;
   const related = relatedByStep?.[active.step];
   // Phase color for this recipe, shared by the hero and the Learn sections.
-  const tint = PHASE_TINT[active.step] ?? { color: "var(--accent)", soft: "var(--accent-soft)" };
+  // The recipe view is monochrome + accent (the Templates look), no per-phase color.
+  const tint = { color: "var(--accent)", soft: "var(--accent-soft)" };
 
   // Lessons (videos / reads) for this recipe,the player playlist.
   const lessons = lessonsForStep(active);
@@ -245,7 +242,6 @@ export function WorkflowCookbook({ steps, relatedByStep, articleImages }: Workfl
   const isNumericStep = /^\d+$/.test(active.step);
   const showIntro = active.step === "intro" && !!active.courseIntro;
   const firstRecipe = steps.find((s) => /^\d+$/.test(s.step))?.step ?? steps[1]?.step ?? active.step;
-
   // Adjacent steps, so each recipe has a clear path backward and forward.
   const stepIndex = steps.findIndex((s) => s.step === active.step);
   const prevStep = stepIndex > 0 ? steps[stepIndex - 1] : null;
@@ -261,7 +257,7 @@ export function WorkflowCookbook({ steps, relatedByStep, articleImages }: Workfl
       return <p key={i} className="font-mono text-[10.5px] font-semibold uppercase tracking-[0.12em] text-[color:var(--ink-faded)]">{b.text}</p>;
     }
     if (b.kind === "text") {
-      return <p key={i} className="text-body">{b.text}</p>;
+      return <p key={i} className="text-body"><InlineCode text={b.text} /></p>;
     }
     if (b.kind === "video") {
       return (
@@ -390,16 +386,43 @@ export function WorkflowCookbook({ steps, relatedByStep, articleImages }: Workfl
       className="w-full"
       style={{ "--page-accent": "var(--page-amber)", "--page-accent-soft": "var(--page-amber-soft)" } as CSSProperties}
     >
-      <div className="lg:flex lg:items-start">
+      {/* Desktop hint, shown below lg where the content rail is hidden. The
+          cookbook is built for a wider screen, so nudge mobile visitors. */}
+      {mounted && !hintDismissed && (
+        <div className="flex items-start gap-2.5 border-b border-[color:var(--ink-rule)] bg-[color:var(--paper-soft)] px-5 py-2.5 lg:hidden">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden className="mt-0.5 shrink-0 text-[color:var(--accent)]">
+            <rect x="2" y="3" width="20" height="14" rx="2" /><path d="M8 21h8" /><path d="M12 17v4" />
+          </svg>
+          <p className="flex-1 text-[12.5px] leading-snug text-[color:var(--ink-soft)]">
+            <span className="font-semibold text-[color:var(--ink)]">Best on desktop.</span> The cookbook is built for a wider screen. Open it on a computer for the full course view with the content rail.
+          </p>
+          <button
+            type="button"
+            onClick={dismissHint}
+            aria-label="Dismiss"
+            className="-m-1 shrink-0 p-1 text-[color:var(--ink-faded)] transition-colors hover:text-[color:var(--ink)]"
+          >
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+              <path d="M18 6 6 18M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+      )}
 
-        {/* Main content, a centered reading column between the two sidebars. */}
-        <div className="min-w-0 flex-1">
-          <div className="mx-auto w-full max-w-3xl px-5 py-12 sm:px-8 sm:py-14">
+      <div className="px-3 pb-8 sm:px-5 lg:px-8">
+        <SlideCard className="!mx-0 overflow-hidden p-0">
+          <div className="lg:flex lg:items-stretch">
+            {/* Main column, scrolls with the page */}
+            <div className="min-w-0 flex-1">
+              {showIntro ? (
+                <CourseIntro step={active} steps={steps} stats={stats} contributors={contributors} onStart={() => { markStepDone(active); goToStep(firstRecipe); }} onPick={(s) => { markStepDone(active); goToStep(s); }} />
+              ) : (
+              <div className="px-5 py-8 sm:px-8 sm:py-10 lg:px-10">
 
             {/* Mobile module picker, the right rail is lg-only, so on small
                 screens this strip is how you jump between recipes. */}
-            <div className="lg:hidden -mx-5 mb-6 border-y border-[color:var(--ink-rule)]">
-        <div className="flex items-center gap-1 overflow-x-auto no-scrollbar px-5 py-2">
+            <div className="lg:hidden mb-6 -mx-5 border-y border-[color:var(--ink-rule)] bg-[color:var(--paper-soft)]">
+        <div className="flex items-center gap-1 overflow-x-auto no-scrollbar px-4 py-2.5">
           {steps.map((s) => {
             const isActive = s.step === activeStep;
             const isNumeric = /^\d+$/.test(s.step);
@@ -424,81 +447,41 @@ export function WorkflowCookbook({ steps, relatedByStep, articleImages }: Workfl
         </div>
       </div>
 
-            {/* The intro step renders the course-landing instead of a lesson. */}
-            {showIntro ? (
-          <CourseIntro step={active} steps={steps} onStart={() => { markStepDone(active); goToStep(firstRecipe); }} onPick={(s) => { markStepDone(active); goToStep(s); }} />
-        ) : (
         <div className="min-w-0">
 
-          {/* Recipe hero: a phase-tinted band with a big number, kicker, title, lead. */}
           {(() => {
             const pct = mounted && activeItems.length > 0 ? Math.round((totalDone / activeItems.length) * 100) : 0;
+            const part = isNumericStep ? `${phasePartLabel(active.step)} · Recipe ${active.step}` : "Before you begin";
+            const partWithTime = active.timeEstimate ? `${part} · ~${active.timeEstimate}` : part;
             return (
-              <header
-                className="relative mb-8 overflow-hidden rounded-2xl p-6 sm:p-8"
-                style={{ background: `linear-gradient(135deg, ${tint.color}, ${tint.color} 55%, rgba(0,0,0,0.18))` }}
-              >
-                {/* Oversized ghost number, bleeding off the right edge */}
-                {isNumericStep && (
-                  <span aria-hidden className="pointer-events-none absolute -right-3 -top-6 font-mono text-[140px] font-bold leading-none tracking-tighter text-white/15 select-none">
-                    {active.step}
-                  </span>
-                )}
-
-                <div className="relative flex items-center justify-between gap-4">
-                  <span className="font-mono text-[10.5px] font-semibold uppercase tracking-[0.2em] text-white/80">
-                    {isNumericStep ? `${PHASE_NAME[active.step] ?? "Cookbook"} · Recipe ${active.step}` : "Before you begin"}
-                  </span>
-                  {active.timeEstimate && (
-                    <span className="inline-flex shrink-0 items-center gap-1.5 text-[12px] text-white/80">
-                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-                        <circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" />
-                      </svg>
-                      ~{active.timeEstimate}
-                    </span>
-                  )}
-                </div>
-
-                <h1 className="relative mt-4 max-w-2xl text-[32px] sm:text-[44px] font-bold leading-[1.02] tracking-tight text-white">
-                  {active.title}
-                </h1>
-                <p className="relative mt-3 max-w-2xl text-[16px] leading-relaxed text-white/85">
-                  {active.whatThis}
-                </p>
-
-                {mounted && activeItems.length > 0 && (
-                  <div className="relative mt-6 flex max-w-2xl items-center gap-3">
-                    <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-white/25">
-                      <div className="h-full rounded-full bg-white transition-all duration-500" style={{ width: `${pct}%` }} />
-                    </div>
-                    <span className="shrink-0 text-[12px] font-semibold tabular-nums text-white">
-                      {stepFinished && <span aria-hidden>✓ </span>}{totalDone}/{activeItems.length}
-                    </span>
+              <>
+              <SlideHeader
+                partLabel={partWithTime}
+                title={active.title}
+                lede={active.whatThis}
+              />
+              {mounted && activeItems.length > 0 && (
+                <div className="mb-6 flex max-w-md items-center gap-3">
+                  <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-[color:var(--paper-soft)]">
+                    <div className="h-full rounded-full bg-[color:var(--accent)] transition-all duration-500" style={{ width: `${pct}%` }} />
                   </div>
-                )}
-              </header>
+                  <span className="shrink-0 text-[12px] font-semibold tabular-nums text-[color:var(--ink-soft)]">
+                    {stepFinished && <span aria-hidden className="text-[color:var(--accent)]">✓ </span>}{totalDone}/{activeItems.length}
+                  </span>
+                </div>
+              )}
+              </>
             );
           })()}
 
-          {/* Outcome, a quiet inline rail, no boxed card. */}
           {active.tldr && (
-            <div className="mb-8 max-w-2xl space-y-2.5 border-l-2 border-[color:var(--ink-rule)] pl-4">
-              <p className="text-[14.5px] font-medium leading-snug text-[color:var(--ink)]">{active.tldr.accomplish}</p>
-              <p className="text-[13px] leading-relaxed text-[color:var(--ink-soft)]">
-                <span className="font-mono text-[10.5px] uppercase tracking-[0.12em] text-[color:var(--ink-faded)]">Output</span>{" "}
-                {active.tldr.deliverable}
-              </p>
-              <p className="text-[13px] leading-relaxed text-[color:var(--ink-soft)]">
-                <span className="font-mono text-[10.5px] uppercase tracking-[0.12em] text-[color:var(--ink-faded)]">Needs</span>{" "}
-                {active.tldr.prerequisites.join(", ")}
-              </p>
-              {active.tldr.feedsInto && (
-                <p className="text-[13px] leading-relaxed text-[color:var(--ink-soft)]">
-                  <span className="font-mono text-[10.5px] uppercase tracking-[0.12em] text-[color:var(--ink-faded)]">Feeds into</span>{" "}
-                  {active.tldr.feedsInto}
-                </p>
-              )}
-            </div>
+            <SlideMeta
+              rows={[
+                { label: "Output", value: <code className="font-mono text-[13px] text-[color:var(--ink)]">{active.tldr.deliverable}</code> },
+                { label: "Needs", value: active.tldr.prerequisites.join(", ") },
+                ...(active.tldr.feedsInto ? [{ label: "Feeds into", value: active.tldr.feedsInto }] : []),
+              ]}
+            />
           )}
 
           {/* "Already set up?" skip hint, lets experienced devs move past a step */}
@@ -530,25 +513,7 @@ export function WorkflowCookbook({ steps, relatedByStep, articleImages }: Workfl
             </div>
           )}
 
-          {/* Per-recipe tabs, segmented control */}
-          <div className="mb-7 inline-flex items-center gap-1 rounded-lg border border-[color:var(--ink-rule)] bg-[color:var(--paper-soft)] p-1">
-            {RECIPE_TABS.map(([key, label]) => (
-              <button
-                key={key}
-                type="button"
-                onClick={() => setRecipeTab(key)}
-                aria-current={recipeTab === key ? "true" : undefined}
-                className={`flex items-center gap-1.5 rounded-md px-3.5 py-1.5 text-[13px] font-medium transition-colors ${
-                  recipeTab === key
-                    ? "bg-[color:var(--paper)] text-[color:var(--ink)] shadow-[0_1px_2px_rgba(0,0,0,0.07)]"
-                    : "text-[color:var(--ink-faded)] hover:text-[color:var(--ink-soft)]"
-                }`}
-              >
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>{tabIcon(key)}</svg>
-                {label}
-              </button>
-            ))}
-          </div>
+          <SlideSubnav items={RECIPE_TABS} active={recipeTab} onSelect={setRecipeTab} ariaLabel="Recipe sections" />
 
           {recipeTab === "learn" && (active.learn && active.learn.length > 0 ? (
             (() => {
@@ -565,13 +530,8 @@ export function WorkflowCookbook({ steps, relatedByStep, articleImages }: Workfl
                 <div className="max-w-2xl space-y-5">
                   {lead.length > 0 && <div className="space-y-4">{lead.map((blk, i) => renderLearnBlock(blk, i))}</div>}
                   {sections.map((sec, si) => (
-                    <section key={si} className="overflow-hidden rounded-xl border border-[color:var(--ink-rule)] bg-[color:var(--paper)] p-5 shadow-[0_1px_2px_rgba(0,0,0,0.04)]" style={{ borderLeft: `3px solid ${tint.color}` }}>
-                      <div className="mb-3.5 flex items-center gap-2.5">
-                        <span aria-hidden className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg" style={{ backgroundColor: tint.soft, color: tint.color }}>
-                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">{sectionIcon(sec.heading)}</svg>
-                        </span>
-                        <h3 className="text-[16px] font-semibold tracking-tight text-[color:var(--ink)]">{sec.heading}</h3>
-                      </div>
+                    <section key={si} className="space-y-3">
+                      <h3 className="slide-section-title text-[15px]">{sec.heading}</h3>
                       <div className="space-y-4">{sec.blocks.map((blk, i) => renderLearnBlock(blk, i))}</div>
                     </section>
                   ))}
@@ -796,19 +756,21 @@ export function WorkflowCookbook({ steps, relatedByStep, articleImages }: Workfl
           {recipeTab === "faq" && (
             <section className="mb-8">
               {active.faqs && active.faqs.length > 0 ? (
-                <div className="space-y-2.5">
+                <SlideRowList>
                   {active.faqs.map(({ q, a }) => (
-                    <details key={q} name="recipe-faq" className="group rounded-xl border border-[color:var(--ink-rule)] px-4 transition-colors hover:border-[color:var(--ink-soft)]">
-                      <summary className="flex cursor-pointer list-none items-center justify-between gap-3 py-3.5 [&::-webkit-details-marker]:hidden">
-                        <span className="text-[15px] font-medium text-[color:var(--ink)]">{q}</span>
-                        <span aria-hidden className="shrink-0 text-[color:var(--ink-faded)] transition-transform group-open:rotate-90">
-                          <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M3 1L7 5L3 9" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg>
-                        </span>
-                      </summary>
-                      <p className="text-body pb-4">{a}</p>
-                    </details>
+                    <SlideRowItem key={q}>
+                      <details name="recipe-faq">
+                        <summary>
+                          <span>{q}</span>
+                          <span aria-hidden className="shrink-0 text-[color:var(--ink-faded)]">
+                            <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M3 1L7 5L3 9" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                          </span>
+                        </summary>
+                        <p className="slide-row-body">{a}</p>
+                      </details>
+                    </SlideRowItem>
                   ))}
-                </div>
+                </SlideRowList>
               ) : (
                 <div className="vp-empty">
                   <p className="vp-empty-title">No FAQs for this recipe yet.</p>
@@ -821,44 +783,33 @@ export function WorkflowCookbook({ steps, relatedByStep, articleImages }: Workfl
             </section>
           )}
 
-          {/* Step navigation, a clear path forward that also works on mobile where the rail is hidden */}
-          <nav className="mt-14 grid grid-cols-2 gap-3 border-t border-[color:var(--ink-rule)] pt-6">
-            {prevStep ? (
-              <button type="button" onClick={() => goToStep(prevStep.step)} className="group flex items-center gap-3 rounded-xl border border-[color:var(--ink-rule)] bg-[color:var(--paper)] px-4 py-3 text-left transition-all hover:-translate-y-0.5 hover:border-[color:var(--ink-soft)] hover:shadow-[0_10px_24px_-14px_rgba(0,0,0,0.18)]">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden className="shrink-0 text-[color:var(--ink-faded)] transition-transform group-hover:-translate-x-0.5"><path d="M19 12H5" /><path d="M11 18l-6-6 6-6" /></svg>
-                <span className="min-w-0">
-                  <span className="block font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-[color:var(--ink-faded)]">Previous</span>
-                  <span className="block truncate text-[13.5px] font-semibold text-[color:var(--ink)]">{prevStep.title}</span>
-                </span>
-              </button>
-            ) : <span aria-hidden />}
-            {nextStep ? (
-              <button type="button" onClick={() => goToStep(nextStep.step)} className={`group flex items-center justify-end gap-3 rounded-xl border px-4 py-3 text-right transition-all hover:-translate-y-0.5 hover:shadow-[0_10px_24px_-14px_rgba(0,0,0,0.2)] ${stepFinished ? "border-[color:var(--accent)] bg-[color:var(--accent-soft)]" : "border-[color:var(--ink-rule)] bg-[color:var(--paper)] hover:border-[color:var(--ink-soft)]"}`}>
-                <span className="min-w-0">
-                  <span className={`block font-mono text-[10px] font-semibold uppercase tracking-[0.14em] ${stepFinished ? "text-[color:var(--accent)]" : "text-[color:var(--ink-faded)]"}`}>{stepFinished ? "Done, next up" : "Next"}</span>
-                  <span className="block truncate text-[13.5px] font-semibold text-[color:var(--ink)]">{nextStep.title}</span>
-                </span>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden className={`shrink-0 transition-transform group-hover:translate-x-0.5 ${stepFinished ? "text-[color:var(--accent)]" : "text-[color:var(--ink-faded)]"}`}><path d="M5 12h14" /><path d="M13 6l6 6-6 6" /></svg>
-              </button>
-            ) : <span aria-hidden />}
-          </nav>
-
-        </div>
-            )}
-          </div>
-        </div>
-
-        {/* Course content rail, flush to the right edge and styled like the
-            left app sidebar (same bg + a mirrored divider), full height. */}
-        <aside className="hidden lg:flex lg:flex-col w-[300px] shrink-0 sticky top-0 h-screen overflow-y-auto border-l border-[color:var(--ink-rule)] bg-[color:var(--sidebar-bg)]">
-          <CourseContentRail
-            steps={steps}
-            activeStep={activeStep}
-            checked={checked}
-            mounted={mounted}
-            onSelect={goToStep}
+          <SlidePager
+            prev={prevStep ? { title: prevStep.title } : null}
+            next={nextStep ? { title: nextStep.title } : null}
+            stepFinished={stepFinished}
+            onPrev={() => prevStep && goToStep(prevStep.step)}
+            onNext={() => nextStep && goToStep(nextStep.step)}
           />
-        </aside>
+
+        </div>
+              </div>
+              )}
+            </div>
+
+            {/* Course rail, right column inside the same slide (desktop only) */}
+            <aside className="cookbook-rail hidden lg:flex lg:w-[272px] shrink-0 flex-col border-t border-[color:var(--ink-rule)] lg:border-t-0 lg:border-l">
+              <div className="lg:sticky lg:top-0 lg:max-h-[calc(100vh-5rem)] lg:overflow-y-auto">
+                <CourseContentRail
+                  steps={steps}
+                  activeStep={activeStep}
+                  checked={checked}
+                  mounted={mounted}
+                  onSelect={goToStep}
+                />
+              </div>
+            </aside>
+          </div>
+        </SlideCard>
       </div>
     </div>
   );

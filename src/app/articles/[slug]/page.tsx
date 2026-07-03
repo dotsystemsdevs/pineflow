@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
+import { BackLink } from "@/components/layout/back-link";
 import { getArticle, getAllArticles, CATEGORY_LABEL } from "@/lib/articles";
 import { LIST_PROBLEMS, LIST_CATEGORY_LABEL } from "@/lib/list-problems";
 
@@ -49,12 +50,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
       <article className="mx-auto max-w-2xl">
 
         {/* Back */}
-        <Link
-          href="/articles"
-          className="inline-flex w-fit shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border border-[color:var(--ink-rule)] px-3.5 py-1.5 text-[13px] font-medium text-[color:var(--ink-soft)] transition-colors hover:border-[color:var(--ink-soft)] hover:text-[color:var(--ink)]"
-        >
-          <span aria-hidden>←</span> Articles
-        </Link>
+        <BackLink href="/articles" label="All articles" />
 
         {/* Header */}
         <header className="mt-8 mb-9">
@@ -74,7 +70,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
 
         {/* Hero image */}
         {article.image && (
-          <div className="relative w-full overflow-hidden mb-10 rounded-xl border border-[color:var(--ink-rule)]" style={{ aspectRatio: "16/9" }}>
+          <div className="relative mb-10 w-full overflow-hidden rounded-lg border border-[color:var(--ink-rule)]" style={{ aspectRatio: "16/9" }}>
             <Image
               src={article.image}
               alt={article.imageAlt}
@@ -96,7 +92,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
         {(relatedArticles.length > 0 || relatedProblems.length > 0) && (
           <aside className="mt-16 border-t border-[color:var(--ink-rule)] pt-8">
                 <h2 className="section-title mb-6 flex items-center gap-2.5">
-                  <span aria-hidden className="text-[22px] leading-none">📚</span>
+                  <span aria-hidden className="emoji-lg">📚</span>
                   Keep reading
                 </h2>
 

@@ -88,7 +88,9 @@ export default async function RootLayout({
           <Sidebar />
           <div className="flex min-w-0 flex-1 flex-col">
             <Navbar />
-            <main id="main" className="flex min-w-0 flex-1 flex-col">{children}</main>
+            <main id="main" className="site-canvas flex min-w-0 flex-1 flex-col">
+              {children}
+            </main>
             <Footer />
           </div>
         </div>

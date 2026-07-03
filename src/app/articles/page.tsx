@@ -88,7 +88,7 @@ export default async function ArticlesPage({ searchParams }: ArticlesPageProps) 
                         sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 360px"
                       />
                     ) : (
-                      <div className="flex h-full w-full items-center justify-center text-[28px]" aria-hidden>
+                      <div className="flex h-full w-full items-center justify-center emoji-xl" aria-hidden>
                         📄
                       </div>
                     )}

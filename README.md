@@ -1,26 +1,34 @@
 # vibeprompt
 
-Open-source prompt library, workflow hub, and site audit tool for vibe coders. Browse 52 battle-tested prompts, read 11 articles, follow a 9-step shipping playbook, and scan any landing page for issues in one click.
+Open-source vibe coding cookbook, fix library, prompt collection, and curated tool list for developers shipping with AI. Browse 56 battle-tested prompts, 50 field-tested fixes, 19 articles, and a 10-step playbook from idea to shipped product.
 
 [![CI](https://github.com/dotsystemsdevs/vibe-prompt/actions/workflows/ci.yml/badge.svg)](https://github.com/dotsystemsdevs/vibe-prompt/actions/workflows/ci.yml)
-![License](https://img.shields.io/github/license/dotsystemsdevs/vibeprompt)
-![Stars](https://img.shields.io/github/stars/dotsystemsdevs/vibeprompt?style=flat)
-![Issues](https://img.shields.io/github/issues/dotsystemsdevs/vibeprompt?style=flat)
-![PRs](https://img.shields.io/github/issues-pr/dotsystemsdevs/vibeprompt?style=flat)
+![License](https://img.shields.io/github/license/dotsystemsdevs/vibe-prompt)
+![Stars](https://img.shields.io/github/stars/dotsystemsdevs/vibe-prompt?style=flat)
+![Issues](https://img.shields.io/github/issues/dotsystemsdevs/vibe-prompt?style=flat)
+![PRs](https://img.shields.io/github/issues-pr/dotsystemsdevs/vibe-prompt?style=flat)
 
 **Live**: https://vibeprompt.tech
 
 ---
 
+## Featured on
+
+- [awesome-vibe-coding-resources](https://github.com/acvnace/awesome-vibe-coding-resources) (Documentation for AI Coding)
+- [awesome-vibe-coding](https://github.com/ai-for-developers/awesome-vibe-coding/pull/68) (Project Documentation, PR open)
+
+---
+
 ## What This Is
 
-vibeprompt is a free, open-source tool for developers shipping with AI.
+vibeprompt is a free, open-source toolkit for developers shipping with AI.
 
-- **Browse** 52 prompts organized by workflow stage, copy in one click
-- **Follow** a 9-step vibe coding playbook from idea to shipped product
-- **Scan** any site with PageLens, an instant SEO, conversion, security, and AI-readiness audit
-- **Explore** a curated list of AI coding tools and resources
-- No login required. No paywall.
+- **Cookbook** , 10-step workflow from environment setup to iterate, with prompts wired into each stage
+- **Fixes** , 50 searchable failure modes (security, deploy, conversion, burnout) with copy-paste recovery prompts
+- **Articles** , 19 long-form posts with receipts from real shipped apps
+- **Awesome** , 100 curated AI coding tools grouped by cookbook stage
+- **Templates** , AGENTS.md, PRD, architecture, and memory-bank starters
+- No login required. No paywall. MIT licensed.
 
 ---
 
@@ -28,17 +36,21 @@ vibeprompt is a free, open-source tool for developers shipping with AI.
 
 | Route | What it does |
 |---|---|
-| `/` | Homepage with workflow preview and FAQ |
-| `/browse` | Browse all 52 prompts by category, with copy count tracking |
-| `/prompts/[slug]` | Prompt detail with copy count and contributor badge |
-| `/workflow` | 9-step vibe coding playbook |
-| `/scan` | PageLens site audit (SEO, conversion, trust, security, AEO) |
+| `/` | Homepage |
+| `/workflow` | 10-step vibe coding cookbook with prompts per stage |
+| `/fixes` | Fix library; `/fixes/[id]` for each failure mode |
+| `/weekly` | Weekly Fix newsletter archive; `/weekly/[slug]` per issue |
 | `/articles` | Article index; `/articles/[slug]` for each post |
 | `/awesome` | Curated list of AI/vibe coding tools |
-| `/learn` | Learning resources |
+| `/templates` | Downloadable AGENTS.md, PRD, and project doc templates |
+| `/built-with` | Case studies from shipped apps; `/built-with/[slug]` per app |
+| `/compare` | How vibeprompt compares to other resources |
+| `/submit-fix` | Submit a field-tested fix for review |
+| `/about` | About the project |
+| `/faq` | FAQ |
 | `/contact` | Contact |
 | `/privacy` | Privacy policy |
-| `/about` | About the project |
+| `/cookie-policy` | Cookie policy |
 
 ---
 
@@ -48,21 +60,21 @@ vibeprompt is a free, open-source tool for developers shipping with AI.
 vibeprompt/
 ├─ src/
 │  ├─ app/                  # Next.js App Router pages
-│  │  ├─ api/audit/         # PageLens audit API (40+ rules)
-│  │  ├─ api/copy-counts/   # Prompt copy count API (Vercel KV)
-│  │  └─ scan/              # PageLens scan UI
+│  │  ├─ api/               # copy counts, fix submissions, doc generator
+│  │  ├─ workflow/          # Cookbook
+│  │  ├─ fixes/             # Fix library
+│  │  ├─ articles/          # Long-form posts
+│  │  └─ awesome/           # Curated tool list
 │  ├─ components/           # UI and feature components
-│  │  ├─ prompts/           # Browse, cards, copy actions
-│  │  ├─ layout/            # Navbar, footer
-│  │  └─ ...
 │  └─ lib/
-│     ├─ actions/copies.ts  # Copy count server actions (Vercel KV)
 │     ├─ categories.ts      # Slug to folder mappings (protected)
 │     ├─ prompt-library.ts  # Loads prompts from markdown
-│     ├─ workflow-steps.ts  # 9-step workflow metadata
+│     ├─ workflow-steps.ts  # 10-step workflow metadata
+│     ├─ list-problems.ts   # Fix library entries
+│     ├─ awesome-data.ts    # Curated tool list
 │     └─ types.ts           # Shared types (protected)
-├─ content/                 # Long-form content (e.g. articles)
-├─ prompt-library/          # 52 public prompts (loaded at build time)
+├─ content/articles/        # 19 markdown articles
+├─ prompt-library/          # 56 public prompts (loaded at build time)
 │  ├─ Agent Setup/
 │  ├─ Architecture Stack/
 │  ├─ Build Ship/
@@ -73,6 +85,7 @@ vibeprompt/
 │  ├─ Research Validate/
 │  └─ Testing Quality/
 ├─ public/
+│  ├─ templates/            # AGENTS.md, PRD, and related starters
 │  ├─ llms.txt              # AI crawler context file
 │  └─ robots.txt            # Explicit AI bot permissions
 ├─ AGENTS.md                # Contributor and agent guide
@@ -122,7 +135,7 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=
 
 ## Prompt Library
 
-52 markdown prompts in `prompt-library/`, organized by stage (folder names differ from on-site category labels, see `src/lib/categories.ts`):
+56 markdown prompts in `prompt-library/`, organized by stage (folder names differ from on-site category labels, see `src/lib/categories.ts`):
 
 | Folder | Site label | What it covers |
 |---|---|---|
@@ -136,27 +149,13 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=
 | `Launch Growth/` | Ship | Distribution, positioning, launch |
 | `Ops Maintenance/` | Iterate | Post-launch ops and reliability |
 
+Prompts are browsed and copied from the cookbook at `/workflow`, not as standalone pages.
+
 **Adding a prompt**
 
 1. Open `src/lib/categories.ts` and use the `dirName` for the right folder under `prompt-library/`
-2. Add a kebab-case `.md` file that matches the format in [`CONTRIBUTING.md`](./CONTRIBUTING.md) (one fenced code block under `## Instructions`, placeholders listed under `## Input`, and so on)
+2. Add a kebab-case `.md` file that matches the format in [`CONTRIBUTING.md`](./CONTRIBUTING.md)
 3. Open a PR, for example: `prompt(category): add your-prompt-name`
-
----
-
-## PageLens Audit
-
-`/scan` audits any public URL across 40+ rules in 7 categories:
-
-- **SEO**: title, meta description, canonical, headings
-- **Conversion**: CTA presence, social proof, pricing, FAQ, email capture
-- **Trust**: OG tags, structured data, privacy link, accessibility
-- **Structure**: semantic HTML, viewport, nav/main/footer landmarks
-- **Performance**: render-blocking scripts, lazy loading, resource hints
-- **Security**: CSP, HSTS, X-Frame-Options, X-Content-Type-Options
-- **AI/AEO**: llms.txt, FAQ schema, robots.txt AI crawler permissions
-
-Audit API: `GET /api/audit?url=https://example.com`
 
 ---
 
@@ -164,7 +163,7 @@ Audit API: `GET /api/audit?url=https://example.com`
 
 **Done**
 
-- 52 prompts across 9 categories, 11 articles, PageLens, workflow, copy counts, public access with no login
+- 56 prompts, 50 fixes, 19 articles, 100 awesome tools, 10-step cookbook, templates, built-with case studies, public access with no login
 
 **Next (see also [ROADMAP.md](./ROADMAP.md) and [Issues](https://github.com/dotsystemsdevs/vibe-prompt/issues))**
 

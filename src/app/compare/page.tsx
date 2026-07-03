@@ -94,7 +94,7 @@ export default function ComparePage() {
                           // eslint-disable-next-line @next/next/no-img-element
                           <img src={faviconFor(r.url)} alt="" width={18} height={18} loading="lazy" className="shrink-0 rounded-sm" />
                         ) : (
-                          <span aria-hidden className="shrink-0 text-[16px] leading-none">{r.emoji}</span>
+                          <span aria-hidden className="emoji-sm shrink-0">{r.emoji}</span>
                         )}
                         <div className="min-w-0">
                           <div className="text-body font-semibold text-[color:var(--ink)]">{r.name}</div>
