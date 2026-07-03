@@ -102,7 +102,7 @@ export function SlidePager({
   );
 }
 
-/** White dot-grid slide card. */
+/** Content width wrapper, no card chrome. */
 export function SlideCard({
   children,
   className = "",
@@ -111,7 +111,7 @@ export function SlideCard({
   className?: string;
 }) {
   return (
-    <div className={`cookbook-slide mx-3 my-4 sm:mx-5 sm:my-6 lg:mx-6 lg:my-8 ${className}`.trim()}>
+    <div className={`mx-auto w-full ${className}`.trim()}>
       {children}
     </div>
   );

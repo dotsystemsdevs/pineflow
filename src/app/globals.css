@@ -59,7 +59,7 @@ html {
   --paper: #FFFFFF;              /* White, card surfaces */
   --paper-soft: #F2F2F3;         /* light grey inset surface */
   --paper-edge: #E6E8EC;         /* divider */
-  --page: #E8EAED;               /* canvas, matches site-canvas dot field */
+  --page: #FFFFFF;               /* main content canvas, flat white */
   --ink: #2F3138;                /* Gunmetal, primary text */
   --ink-soft: #565963;           /* slate, secondary text */
   --ink-faded: #878787;          /* Gunsmoke, muted */
@@ -73,7 +73,7 @@ html {
   --accent-line: rgba(91, 91, 245, 0.34);
   --accent-ring: rgba(91, 91, 245, 0.30);
 
-  --background: #E8EAED;
+  --background: #FFFFFF;
   --foreground: #2F3138;
   --font-geist-sans: var(--font-sans), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
   --font-geist-mono: var(--font-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
@@ -370,22 +370,16 @@ html {
     color: var(--ink-soft);
       }
 
-  /* Site canvas, single dot-grid layer (slides stay plain white) */
+  /* Main content area, flat background (no dot grid, no floating cards) */
   .site-canvas {
-    background-color: var(--page);
-    background-image: radial-gradient(circle, rgba(0, 0, 0, 0.065) 1px, transparent 1px);
-    background-size: 20px 20px;
-  }
-
-  .cookbook-paper {
-    color: var(--foreground);
+    background-color: var(--paper);
   }
 
   .cookbook-slide {
-    background-color: var(--paper);
-    border: 1px solid var(--ink-rule);
-    border-radius: 0.5rem;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 10px 30px -12px rgba(0, 0, 0, 0.1);
+    background-color: transparent;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
   }
 
   .slide-section-title {
@@ -922,40 +916,33 @@ html {
      vertical rhythm line up site-wide. */
   .page-shell {
     margin-inline: auto;
-    margin-block: 0.75rem 1.5rem;
-    width: calc(100% - 1.5rem);
+    width: 100%;
     max-width: 44rem;
     padding-inline: 1.5rem;
     padding-block: 2rem;
-    background-color: var(--paper);
-    border: 1px solid var(--ink-rule);
-    border-radius: 0.5rem;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 10px 30px -12px rgba(0, 0, 0, 0.1);
   }
   .page-shell-wide {
     margin-inline: auto;
-    margin-block: 0.75rem 1.5rem;
-    width: calc(100% - 1.5rem);
+    width: 100%;
     max-width: 64rem;
     padding-inline: 1.5rem;
     padding-block: 2rem;
-    background-color: var(--paper);
-    border: 1px solid var(--ink-rule);
-    border-radius: 0.5rem;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 10px 30px -12px rgba(0, 0, 0, 0.1);
   }
   @media (min-width: 640px) {
     .page-shell, .page-shell-wide {
-      margin-block: 1rem 2rem;
       padding-block: 2.5rem;
-      width: calc(100% - 2.5rem);
+      padding-inline: 2rem;
+    }
+  }
+  @media (min-width: 1024px) {
+    .page-shell, .page-shell-wide {
+      padding-inline: 2.5rem;
     }
   }
   @media (max-width: 480px) {
     .page-shell, .page-shell-wide {
       padding-inline: 1.25rem;
       padding-block: 1.75rem;
-      width: calc(100% - 1rem);
     }
   }
 
