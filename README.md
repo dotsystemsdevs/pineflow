@@ -43,7 +43,6 @@ vibeprompt is a free, open-source toolkit for developers shipping with AI.
 | `/articles` | Article index; `/articles/[slug]` for each post |
 | `/awesome` | Curated list of AI/vibe coding tools |
 | `/templates` | Downloadable AGENTS.md, PRD, and project doc templates |
-| `/built-with` | Case studies from shipped apps; `/built-with/[slug]` per app |
 | `/compare` | How vibeprompt compares to other resources |
 | `/submit-fix` | Submit a field-tested fix for review |
 | `/about` | About the project |
@@ -163,7 +162,7 @@ Prompts are browsed and copied from the cookbook at `/workflow`, not as standalo
 
 **Done**
 
-- 56 prompts, 50 fixes, 19 articles, 100 awesome tools, 10-step cookbook, templates, built-with case studies, public access with no login
+- 56 prompts, 50 fixes, 19 articles, 100 awesome tools, 10-step cookbook, templates, public access with no login
 
 **Next (see also [ROADMAP.md](./ROADMAP.md) and [Issues](https://github.com/dotsystemsdevs/vibe-prompt/issues))**
 

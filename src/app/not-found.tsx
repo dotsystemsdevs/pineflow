@@ -21,12 +21,12 @@ const SUGGESTIONS = [
   {
     href: "/awesome",
     label: "Tools & resources",
-    description: "MCP servers, agents, CLIs, no affiliates.",
+    description: "Curated AI coding tools, no affiliates.",
   },
   {
-    href: "/built-with",
-    label: "Built with vibeprompt",
-    description: "Indie apps shipped end to end with the workflow.",
+    href: "/templates",
+    label: "Templates",
+    description: "AGENTS.md, PRD, architecture docs, and memory-bank starters.",
   },
 ];
 

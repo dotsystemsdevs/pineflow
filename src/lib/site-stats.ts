@@ -1,6 +1,5 @@
 import { LIST_PROBLEMS } from "./list-problems";
 import { AWESOME_CATEGORIES } from "./awesome-data";
-import { BUILT_WITH_PROJECTS } from "./built-with-data";
 import { getPromptLibrary } from "./prompt-library";
 import { getAllArticles } from "./articles";
 
@@ -9,7 +8,6 @@ export type SiteStats = {
   prompts: number;
   articles: number;
   tools: number;
-  apps: number;
 };
 
 /** The authority numbers, used on the homepage + Fixes hub. */
@@ -21,6 +19,5 @@ export async function getSiteStats(): Promise<SiteStats> {
     prompts: prompts.length,
     articles: articles.length,
     tools,
-    apps: BUILT_WITH_PROJECTS.length,
   };
 }

@@ -17,7 +17,6 @@ const PAGE_TITLES: Record<string, string> = {
   "/": "vibeprompt",
   "/fixes": "Fixes",
   "/workflow": "Cookbook",
-  "/built-with": "Built with",
   "/weekly": "Weekly Fix",
   "/articles": "Articles",
   "/awesome": "Awesome",
@@ -33,7 +32,6 @@ const PAGE_ICONS: Record<string, string> = {
   "/": "🏠",
   "/fixes": "🚑",
   "/workflow": "🍳",
-  "/built-with": "🚀",
   "/weekly": "📬",
   "/articles": "📝",
   "/awesome": "🧰",
@@ -70,10 +68,6 @@ function pageInfo(pathname: string) {
   // Weekly Fix issue
   if (pathname.startsWith("/weekly/")) {
     return { title: "Issue", icon: "📬", parent: { href: "/weekly", title: "Weekly Fix", icon: "📬" } };
-  }
-  // Built-with postmortem
-  if (pathname.startsWith("/built-with/")) {
-    return { title: "Postmortem", icon: "🚀", parent: { href: "/built-with", title: "Built with", icon: "🚀" } };
   }
   return { title: "Page", icon: "📄" };
 }

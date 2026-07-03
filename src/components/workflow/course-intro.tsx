@@ -60,7 +60,7 @@ export function CourseIntro({
               {stats && (
                 <>
                   <span aria-hidden className="h-1 w-1 rounded-full bg-[color:var(--ink-rule)]" />
-                  <span><span className="font-semibold tabular-nums text-[color:var(--ink)]">{stats.apps}</span> apps shipped</span>
+                  <span><span className="font-semibold tabular-nums text-[color:var(--ink)]">{stats.fixes}</span> fixes</span>
                 </>
               )}
               <span aria-hidden className="h-1 w-1 rounded-full bg-[color:var(--ink-rule)]" />

@@ -7,10 +7,9 @@ export function StatsRow({ stats }: { stats: SiteStats }) {
     { n: stats.prompts, label: "battle-tested prompts" },
     { n: stats.articles, label: "deep-dive articles" },
     { n: stats.tools, label: "curated AI tools" },
-    { n: stats.apps, label: "shipped apps as proof" },
   ];
   return (
-    <dl className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+    <dl className="grid grid-cols-2 gap-3 sm:grid-cols-2 lg:grid-cols-4">
       {items.map((it) => (
         <div key={it.label} className="vp-card vp-fill vp-card-tight">
           <dt className="sr-only">{it.label}</dt>

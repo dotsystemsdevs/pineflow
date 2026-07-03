@@ -2,7 +2,7 @@ import Link from "next/link";
 
 /**
  * The one "back to the index" control, used on every detail page (/fixes/[id],
- * /articles/[slug], /weekly/[slug], /built-with/[slug]). A single pill so the
+ * /articles/[slug], /weekly/[slug]). A single pill so the
  * back affordance reads identically site-wide.
  */
 export function BackLink({ href, label }: { href: string; label: string }) {

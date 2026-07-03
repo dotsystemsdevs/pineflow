@@ -17,7 +17,6 @@ export default async function HomePage() {
     { href: "/fixes", label: "Fixes", meta: `${stats.fixes} fixes` },
     { href: "/articles", label: "Articles", meta: `${stats.articles} articles` },
     { href: "/awesome", label: "Awesome", meta: `${stats.tools} tools` },
-    { href: "/built-with", label: "Built with", meta: `${stats.apps} apps` },
     { href: "/templates", label: "Templates", meta: `${stats.prompts} prompts` },
   ] as const;
 
@@ -25,7 +24,7 @@ export default async function HomePage() {
     "@context": "https://schema.org",
     "@type": "WebApplication",
     name: "vibeprompt",
-    description: `Open-source vibe coding cookbook: ${stats.fixes} fixes, ${recipeCount} recipes, ${stats.prompts} prompts, and ${stats.apps} shipped app case studies. Free forever.`,
+    description: `Open-source vibe coding cookbook: ${stats.fixes} fixes, ${recipeCount} recipes, ${stats.prompts} prompts, and ${stats.tools} curated tools. Free forever.`,
     url: "https://vibeprompt.tech",
     applicationCategory: "DeveloperApplication",
     operatingSystem: "Web",

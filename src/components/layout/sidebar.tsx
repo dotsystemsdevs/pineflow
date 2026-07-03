@@ -32,7 +32,6 @@ const MENU: NavGroup[] = [
   { href: "/articles", icon: "📰", label: "Articles", match: (p) => p.startsWith("/articles") },
   { href: "/awesome", icon: "🧰", label: "Awesome", match: (p) => p.startsWith("/awesome") },
   { href: "/templates", icon: "🗂️", label: "Templates", match: (p) => p.startsWith("/templates") },
-  { href: "/built-with", icon: "🚀", label: "Built with", match: (p) => p.startsWith("/built-with") },
 ];
 
 export function Sidebar() {

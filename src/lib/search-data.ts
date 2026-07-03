@@ -19,7 +19,6 @@ const STATIC_PAGES: SearchItem[] = [
   { type: "page", id: "articles", title: "Articles", href: "/articles", snippet: "The latest in vibe coding: new apps, model drops, new tools, and deep-dive guides." },
   { type: "page", id: "awesome", title: "Awesome tools", href: "/awesome", snippet: "Curated tools, platforms, and resources." },
   { type: "page", id: "compare", title: "Compare", href: "/compare", snippet: "vibeprompt vs the vibe coding tools and books, on the same axes." },
-  { type: "page", id: "built-with", title: "Built with vibeprompt", href: "/built-with", snippet: "Real indie apps shipped using the 10-step workflow. What worked, what broke." },
   { type: "page", id: "faq", title: "FAQ", href: "/faq", snippet: "Frequently asked questions." },
 ];
 

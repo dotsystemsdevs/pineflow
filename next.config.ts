@@ -5,7 +5,7 @@ const CSP = [
   "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://va.vercel-scripts.com",
   "style-src 'self' 'unsafe-inline'",
   // Images can come from anywhere over HTTPS. Loosened from a strict allowlist
-  // because /built-with references favicons from many partner domains and the
+  // because article covers and tool favicons use many external domains and the
   // attack surface for images is low (no script execution).
   "img-src 'self' data: blob: https:",
   "font-src 'self' data:",
@@ -49,6 +49,8 @@ const nextConfig: NextConfig = {
       { source: "/articles/closed-testing-on-google-play", destination: "/fixes", permanent: true },
       { source: "/articles/app-store-conversion-rate-deep-dive", destination: "/fixes", permanent: true },
       { source: "/articles/one-shot-myth", destination: "/fixes", permanent: true },
+      { source: "/built-with", destination: "/", permanent: true },
+      { source: "/built-with/:slug", destination: "/", permanent: true },
     ];
   },
   async headers() {
