@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { PageSection, SlideRowItem } from "@/components/layout/slide-ui";
 import {
   LIST_CATEGORIES,
   LIST_CATEGORY_LABEL,
@@ -17,76 +18,6 @@ const NEW_FIXES = new Set<string>([
 ]);
 
 const FAVS_KEY = "vibeprompt-fix-favs";
-
-// A muted color + its own icon per category, so the grid reads as lively and
-// varied (like the reference), not flat. Colors reuse the original page-accent
-// tones (collapsed to ink elsewhere on the site).
-const CAT_STYLE: Record<ListCategory, { color: string; soft: string; icon: ReactNode }> = {
-  build: {
-    color: "#3B6FE0",
-    soft: "rgba(59,111,224,0.12)",
-    icon: (
-      <>
-        <path d="M21 8 12 3 3 8v8l9 5 9-5z" />
-        <path d="m3 8 9 5 9-5" />
-        <path d="M12 13v8" />
-      </>
-    ),
-  },
-  ship: {
-    color: "#12A150",
-    soft: "rgba(18,161,80,0.12)",
-    icon: (
-      <>
-        <path d="M22 2 11 13" />
-        <path d="M22 2 15 22l-4-9-9-4z" />
-      </>
-    ),
-  },
-  grow: {
-    color: "#7C5CFC",
-    soft: "rgba(124,92,252,0.12)",
-    icon: (
-      <>
-        <path d="m3 17 6-6 4 4 8-8" />
-        <path d="M17 7h4v4" />
-      </>
-    ),
-  },
-  earn: {
-    color: "#C2810C",
-    soft: "rgba(194,129,12,0.12)",
-    icon: (
-      <>
-        <circle cx="12" cy="12" r="9" />
-        <path d="M14.5 9.3a2.5 2.5 0 0 0-2.5-1.3c-1.4 0-2.5.8-2.5 1.9s1.1 1.9 2.5 1.9 2.5.8 2.5 1.9-1.1 1.9-2.5 1.9A2.5 2.5 0 0 1 9.5 14.7" />
-        <path d="M12 6v12" />
-      </>
-    ),
-  },
-  stay: {
-    color: "#DC4040",
-    soft: "rgba(220,64,64,0.12)",
-    icon: <path d="M12 3 5 6v5c0 4 3 7 7 8 4-1 7-4 7-8V6z" />,
-  },
-};
-
-// Render the answer with `inline code` spans styled, so the solution reads well
-// directly on the card instead of behind a click.
-function renderAnswer(text: string): ReactNode[] {
-  return text.split(/`([^`]+)`/g).map((part, i) =>
-    i % 2 === 1 ? (
-      <code
-        key={i}
-        className="rounded bg-[color:var(--paper-soft)] px-1 py-0.5 font-mono text-[0.85em] text-[color:var(--ink)]"
-      >
-        {part}
-      </code>
-    ) : (
-      <span key={i}>{part}</span>
-    )
-  );
-}
 
 function FilterPill({
   label,
@@ -106,15 +37,11 @@ function FilterPill({
       type="button"
       onClick={onClick}
       aria-pressed={active}
-      className={`inline-flex items-center gap-1.5 rounded-md px-2.5 py-1 text-meta transition-colors ${
-        active
-          ? "bg-[color:var(--sidebar-active)] text-[color:var(--ink)] font-medium"
-          : "text-[color:var(--ink-soft)] hover:bg-[color:var(--sidebar-hover)] hover:text-[color:var(--ink)]"
-      }`}
+      className="filter-pill"
     >
       {icon}
       <span>{label}</span>
-      <span className="text-[color:var(--ink-faded)] tabular-nums">{count}</span>
+      <span className="filter-pill__count">{count}</span>
     </button>
   );
 }
@@ -167,7 +94,7 @@ export function FixesClient({ problems }: { problems: ListProblem[] }) {
   return (
     <div>
       {/* Category filter, same row style as Awesome / Articles */}
-      <div className="mb-3 flex flex-wrap gap-1">
+      <div className="page-filter-bar">
         <FilterPill label="All" count={counts.all} active={cat === "all" && !savedOnly} onClick={() => { setCat("all"); setSavedOnly(false); }} />
         <FilterPill
           label="Saved"
@@ -192,7 +119,7 @@ export function FixesClient({ problems }: { problems: ListProblem[] }) {
       </div>
 
       {/* Search, same bordered field as the Awesome page */}
-      <div className="relative mb-8">
+      <div className="relative mb-6">
         <svg
           className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[color:var(--ink-faded)]"
           fill="none"
@@ -262,92 +189,62 @@ export function FixesClient({ problems }: { problems: ListProblem[] }) {
           )}
         </div>
       ) : (
-        // One card per fix: Problem on the left, Solution on the right, so the
-        // answer is readable at a glance without clicking through.
-        <ul className="space-y-3">
-          {filtered.map((p) => {
-            const s = CAT_STYLE[p.category];
-            const isFav = mounted && !!favs[p.id];
-            const isNewFix = NEW_FIXES.has(p.id);
-            return (
-              <li key={p.id}>
-                <div className="vp-card-bordered group relative grid gap-x-6 gap-y-3 p-5 transition-colors hover:border-[color:var(--ink-soft)] sm:grid-cols-[minmax(0,15rem)_1fr]">
-                  {/* Save star, pinned to the card corner */}
-                  <button
-                    type="button"
-                    onClick={() => toggleFav(p.id)}
-                    aria-label={isFav ? "Remove from saved" : "Save this fix"}
-                    aria-pressed={isFav}
-                    className="absolute right-3 top-3 z-10 flex h-7 w-7 items-center justify-center rounded-full text-[color:var(--ink-faded)] transition-colors hover:bg-[color:var(--sidebar-hover)] hover:text-[color:var(--ink)]"
-                  >
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill={isFav ? "#E5A100" : "none"} stroke={isFav ? "#E5A100" : "currentColor"} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-                      <path d="M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1z" />
-                    </svg>
-                  </button>
+        <PageSection label={`${filtered.length} fixes`}>
+          <ul className="divide-y divide-[color:var(--ink-rule)]">
+            {filtered.map((p) => {
+              const isFav = mounted && !!favs[p.id];
+              const isNewFix = NEW_FIXES.has(p.id);
+              const meta = [
+                LIST_CATEGORY_LABEL[p.category],
+                isNewFix ? "New" : null,
+                isFav ? "Saved" : null,
+              ]
+                .filter(Boolean)
+                .join(" · ");
 
-                  {/* Problem */}
-                  <div className="flex items-start gap-3 pr-8 sm:pr-0">
-                    <span
-                      aria-hidden
-                      className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl"
-                      style={{ backgroundColor: s.soft, color: s.color }}
-                    >
-                      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-                        {s.icon}
-                      </svg>
-                    </span>
-                    <div className="min-w-0">
-                      <div className="mb-1.5 flex items-center gap-2">
-                        <span className="text-[10.5px] font-semibold uppercase tracking-[0.08em]" style={{ color: s.color }}>
-                          {LIST_CATEGORY_LABEL[p.category]}
-                        </span>
-                        {isNewFix && (
-                          <span className="rounded bg-[color:var(--accent)] px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-[0.08em] text-white">
-                            New
-                          </span>
-                        )}
-                      </div>
-                      <Link
-                        href={`/fixes/${p.id}`}
-                        className="text-[15px] font-semibold leading-snug text-[color:var(--ink)] transition-colors hover:text-[color:var(--accent)]"
-                      >
-                        {p.title}
-                      </Link>
-                    </div>
-                  </div>
-
-                  {/* Solution */}
-                  <div className="min-w-0 pr-8 sm:border-l sm:border-[color:var(--ink-rule)] sm:pl-6 sm:pr-0">
-                    <p className="text-body leading-relaxed text-[color:var(--ink-soft)]">
-                      {renderAnswer(p.answer)}
-                    </p>
+              return (
+                <SlideRowItem key={p.id}>
+                  <div className="group flex items-center gap-2 px-4 py-3 transition-colors hover:bg-[color:var(--sidebar-hover)]">
                     <Link
                       href={`/fixes/${p.id}`}
-                      className="mt-3 inline-flex items-center gap-1 text-meta font-medium text-[color:var(--ink-faded)] transition-colors hover:text-[color:var(--accent)]"
+                      className="flex min-w-0 flex-1 items-center gap-3"
                     >
-                      Copy the prompt <span aria-hidden>→</span>
+                      <span className="min-w-0 flex-1 text-[14px] font-semibold leading-snug text-[color:var(--ink)] group-hover:text-[color:var(--accent)]">
+                        {p.title}
+                      </span>
+                      <span className="hidden shrink-0 font-mono text-[11px] tabular-nums text-[color:var(--ink-faded)] sm:inline">
+                        {meta}
+                      </span>
+                      <span aria-hidden className="shrink-0 text-[color:var(--ink-rule)] transition-transform group-hover:translate-x-0.5 group-hover:text-[color:var(--ink-faded)]">
+                        →
+                      </span>
                     </Link>
+                    <button
+                      type="button"
+                      onClick={() => toggleFav(p.id)}
+                      aria-label={isFav ? "Remove from saved" : "Save this fix"}
+                      aria-pressed={isFav}
+                      className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[color:var(--ink-faded)] transition-colors hover:bg-[color:var(--paper-soft)] hover:text-[color:var(--ink)]"
+                    >
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill={isFav ? "#E5A100" : "none"} stroke={isFav ? "#E5A100" : "currentColor"} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                        <path d="M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1z" />
+                      </svg>
+                    </button>
                   </div>
-                </div>
-              </li>
-            );
-          })}
-
-          {/* Submit a missing fix */}
-          <li>
-            <Link
-              href="/submit-fix"
-              className="group flex items-center justify-center gap-2.5 rounded-[var(--radius-lg)] border border-dashed border-[color:var(--ink-rule)] p-4 text-center transition-colors hover:border-[color:var(--ink-soft)] hover:bg-[color:var(--paper-soft)]"
-            >
-              <span className="flex h-7 w-7 items-center justify-center rounded-full border border-dashed border-[color:var(--ink-rule)] text-[16px] leading-none text-[color:var(--ink-faded)] transition-colors group-hover:border-[color:var(--ink-soft)] group-hover:text-[color:var(--ink)]">
-                +
-              </span>
-              <span className="text-[13px] font-medium text-[color:var(--ink-faded)] transition-colors group-hover:text-[color:var(--ink)]">
-                Submit a fix that&rsquo;s missing
-              </span>
-            </Link>
-          </li>
-        </ul>
+                </SlideRowItem>
+              );
+            })}
+            <SlideRowItem>
+              <Link
+                href="/submit-fix"
+                className="group flex items-center gap-3 px-4 py-3 text-[13px] font-medium text-[color:var(--ink-faded)] transition-colors hover:bg-[color:var(--sidebar-hover)] hover:text-[color:var(--ink)]"
+              >
+                <span className="flex-1">Submit a fix that&apos;s missing</span>
+                <span aria-hidden>→</span>
+              </Link>
+            </SlideRowItem>
+          </ul>
+        </PageSection>
       )}
     </div>
   );

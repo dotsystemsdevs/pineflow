@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { PageHeader } from "@/components/layout/page-header";
+import { IndexRowLink, PageSection, SlideRowItem } from "@/components/layout/slide-ui";
 import { NewsletterCta } from "@/components/fixes/newsletter-cta";
 import { getWeeklyFixesSorted } from "@/lib/weekly-fixes";
 
@@ -42,41 +42,28 @@ export default function WeeklyPage() {
     <main>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaOrg) }} />
 
-      <div className="page-shell">
+      <div className="page-shell stack-block">
         <PageHeader
-          icon="mail"
-          accent="purple"
           kicker="The Weekly Fix"
           title="The Weekly Fix"
-          lede="One AI build failure, the fix, and the prompt that solves it. Read every past issue below, or get the next one in your inbox."
+          lede="One AI build failure, the fix, and the prompt that solves it."
         />
 
-        <div className="mt-8">
-          <NewsletterCta />
-        </div>
+        <NewsletterCta />
 
-        <section className="mt-12">
-          <h2 className="text-label mb-4">
-            Past issues · {issues.length}
-          </h2>
-          <ul className="divide-y divide-[color:var(--ink-rule)] border-y border-[color:var(--ink-rule)]">
+        <PageSection label={`${issues.length} past issues`}>
+          <ul className="divide-y divide-[color:var(--ink-rule)]">
             {issues.map((issue) => (
-              <li key={issue.slug}>
-                <Link href={`/weekly/${issue.slug}`} className="group block py-5">
-                  <div className="flex items-center gap-2 text-meta">
-                    <time dateTime={issue.date}>{formatDate(issue.date)}</time>
-                    <span aria-hidden>·</span>
-                    <span>{issue.readingTime} read</span>
-                  </div>
-                  <h3 className="text-headline mt-1 transition-colors group-hover:text-[color:var(--accent)]">
-                    {issue.title}
-                  </h3>
-                  <p className="text-body mt-1.5">{issue.summary}</p>
-                </Link>
-              </li>
+              <SlideRowItem key={issue.slug}>
+                <IndexRowLink
+                  href={`/weekly/${issue.slug}`}
+                  label={issue.title}
+                  meta={`${formatDate(issue.date)} · ${issue.readingTime}`}
+                />
+              </SlideRowItem>
             ))}
           </ul>
-        </section>
+        </PageSection>
       </div>
     </main>
   );

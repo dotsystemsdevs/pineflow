@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import Link from "next/link";
 
 const FOCUS =
   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--accent-ring)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--background)]";
@@ -99,6 +100,84 @@ export function SlidePager({
         </button>
       ) : <span aria-hidden />}
     </nav>
+  );
+}
+
+const INDEX_ROW =
+  "group flex items-center gap-3 px-4 py-3 transition-colors hover:bg-[color:var(--sidebar-hover)]";
+
+/** Bordered section with optional label bar, shared across hub pages. */
+export function PageSection({
+  label,
+  children,
+  className = "",
+}: {
+  label?: ReactNode;
+  children: ReactNode;
+  className?: string;
+}) {
+  return (
+    <section className={`overflow-hidden rounded-md border border-[color:var(--ink-rule)] ${className}`.trim()}>
+      {label != null && (
+        <div className="border-b border-[color:var(--ink-rule)] bg-[color:var(--paper-soft)] px-4 py-2">
+          <span className="text-label">{label}</span>
+        </div>
+      )}
+      {children}
+    </section>
+  );
+}
+
+/** One aligned index row: title, optional meta, arrow. */
+export function IndexRowLink({
+  href,
+  label,
+  meta,
+  external,
+  className = "",
+}: {
+  href: string;
+  label: ReactNode;
+  meta?: ReactNode;
+  external?: boolean;
+  className?: string;
+}) {
+  const content = (
+    <>
+      <span className="min-w-0 flex-1 text-[14px] font-semibold leading-snug text-[color:var(--ink)] group-hover:text-[color:var(--accent)]">
+        {label}
+      </span>
+      {meta != null && meta !== "" && (
+        <span className="hidden shrink-0 font-mono text-[11px] tabular-nums text-[color:var(--ink-faded)] sm:inline">
+          {meta}
+        </span>
+      )}
+      <span
+        aria-hidden
+        className="shrink-0 text-[color:var(--ink-rule)] transition-transform group-hover:translate-x-0.5 group-hover:text-[color:var(--ink-faded)]"
+      >
+        {external ? "↗" : "→"}
+      </span>
+    </>
+  );
+
+  if (external) {
+    return (
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={`${INDEX_ROW} ${className}`.trim()}
+      >
+        {content}
+      </a>
+    );
+  }
+
+  return (
+    <Link href={href} className={`${INDEX_ROW} ${className}`.trim()}>
+      {content}
+    </Link>
   );
 }
 

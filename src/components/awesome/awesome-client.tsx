@@ -1,141 +1,30 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import Image from "next/image";
+import { IndexRowLink, PageSection, SlideRowItem } from "@/components/layout/slide-ui";
 import type { AwesomeCategory, AwesomeItem } from "@/lib/awesome-data";
 
-// The 149 tools carry 14 fine-grained categories in the data. That's too many
-// filter chips, so we collapse them into 5 broad workflow phases here. The
-// underlying data stays untouched, only the filter UI groups them.
-type GroupKey = "plan" | "setup" | "build" | "ship" | "grow";
-
-const GROUPS: { key: GroupKey; emoji: string; title: string }[] = [
-  { key: "plan", emoji: "📋", title: "Plan" },
-  { key: "setup", emoji: "⚙️", title: "Setup" },
-  { key: "build", emoji: "🛠️", title: "Build" },
-  { key: "ship", emoji: "🚀", title: "Ship" },
-  { key: "grow", emoji: "📈", title: "Grow" },
-];
-
-const GROUP_BY_SLUG: Record<string, GroupKey> = {
-  "research-validate": "plan",
-  "prd-spec": "plan",
-  "setup": "setup",
-  "architecture-stack": "setup",
-  "agent-setup": "setup",
-  "build-ship": "build",
-  "prompting-craft": "build",
-  "backend": "build",
-  "auth": "build",
-  "testing-quality": "ship",
-  "launch-growth": "ship",
-  "monetization": "grow",
-  "email": "grow",
-  "ops-maintenance": "grow",
-};
-
-const GROUP_META = Object.fromEntries(GROUPS.map((g) => [g.key, g])) as Record<
-  GroupKey,
-  { key: GroupKey; emoji: string; title: string }
->;
-
-function groupOf(slug: string): GroupKey {
-  return GROUP_BY_SLUG[slug] ?? "build";
-}
-
-function Favicon({ href, emoji, size = 20 }: { href: string; emoji: string; size?: number }) {
-  const [failed, setFailed] = useState(false);
-  let domain = "";
-  try {
-    domain = new URL(href).hostname;
-  } catch {
-    return <span className="leading-none" style={{ fontSize: size - 2 }}>{emoji}</span>;
-  }
-
-  if (failed) return <span style={{ fontSize: size - 2 }} className="leading-none">{emoji}</span>;
-
-  return (
-    <Image
-      src={`https://icons.duckduckgo.com/ip3/${domain}.ico`}
-      alt=""
-      width={size}
-      height={size}
-      className="shrink-0 rounded-sm"
-      style={{ width: size, height: size }}
-      onError={() => setFailed(true)}
-      unoptimized
-    />
-  );
-}
-
-/* Surface a status-style chip from the tags, mirroring the Active/Available
-   badge in marketplace UIs. Free and open-source rank first per the house rules. */
-function pricing(tags: readonly string[]): { label: string; tone: string } | null {
-  if (tags.includes("free") || tags.includes("open-source")) {
-    return { label: "Free", tone: "vp-badge-success" };
-  }
-  if (tags.includes("free-tier")) return { label: "Freemium", tone: "vp-badge-outline" };
-  if (tags.includes("paid")) return { label: "Paid", tone: "vp-badge" };
+function pricing(tags: readonly string[]): string | null {
+  if (tags.includes("free") || tags.includes("open-source")) return "Free";
+  if (tags.includes("free-tier")) return "Freemium";
+  if (tags.includes("paid")) return "Paid";
   return null;
 }
 
-function ToolRow({
-  item,
-  categoryEmoji,
-  categoryTitle,
-}: {
-  item: AwesomeItem;
-  categoryEmoji: string;
-  categoryTitle: string;
-}) {
-  const status = pricing(item.tags);
+function ToolRow({ item }: { item: AwesomeItem }) {
+  const price = pricing(item.tags);
   let domain = "";
   try {
     domain = new URL(item.href).hostname.replace(/^www\./, "");
   } catch {
     domain = "";
   }
+  const meta = [domain, price].filter(Boolean).join(" · ");
 
   return (
-    <div className="group relative flex items-center gap-3 border-t border-[color:var(--ink-rule)] px-4 py-3 transition-colors first:border-t-0 hover:bg-[color:var(--sidebar-hover)]">
-      {/* Phase emoji, keeps the where-in-the-workflow context */}
-      <span aria-hidden title={categoryTitle} className="hidden w-5 shrink-0 text-center text-[14px] leading-none sm:block">
-        {categoryEmoji}
-      </span>
-
-      {/* Logo */}
-      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-[color:var(--ink-rule)] bg-[color:var(--paper)]">
-        <Favicon href={item.href} emoji={categoryEmoji} size={18} />
-      </span>
-
-      {/* Name + domain */}
-      <div className="min-w-0 flex-1 md:w-48 md:flex-none">
-        <div className="truncate text-body font-semibold text-[color:var(--ink)]">{item.name}</div>
-        {domain && <div className="truncate text-meta text-[color:var(--ink-faded)]">{domain}</div>}
-      </div>
-
-      {/* Description, fills the middle on wider screens */}
-      <p className="hidden min-w-0 flex-1 truncate text-body text-[color:var(--ink-soft)] md:block">
-        {item.description}
-      </p>
-
-      {/* Price */}
-      {status && <span className={`${status.tone} vp-badge shrink-0`}>{status.label}</span>}
-
-      {/* Visit */}
-      <span className="shrink-0 text-label font-medium text-[color:var(--ink-soft)] transition-colors group-hover:text-[color:var(--accent)]">
-        Visit ↗
-      </span>
-
-      {/* Whole-row link, sits under the copy button (z-10) */}
-      <a
-        href={item.href}
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label={`Visit ${item.name}`}
-        className="absolute inset-0"
-      />
-    </div>
+    <SlideRowItem>
+      <IndexRowLink href={item.href} label={item.name} meta={meta} external />
+    </SlideRowItem>
   );
 }
 
@@ -154,16 +43,13 @@ function CategoryChip({
 }) {
   return (
     <button
+      type="button"
       onClick={onClick}
       aria-current={active ? "true" : undefined}
-      className={`inline-flex items-center gap-1.5 rounded-md border px-2.5 py-1 text-meta transition-colors ${
-        active
-          ? "border-[color:var(--accent)] bg-[color:var(--accent-soft)] text-[color:var(--accent)] font-medium"
-          : "border-[color:var(--ink-rule)] text-[color:var(--ink-soft)] hover:border-[color:var(--ink-soft)] hover:text-[color:var(--ink)]"
-      }`}
+      className="filter-pill"
     >
       <span>{label}</span>
-      <span className="text-[color:var(--ink-faded)] tabular-nums">{count}</span>
+      <span className="filter-pill__count">{count}</span>
     </button>
   );
 }
@@ -209,10 +95,14 @@ export function AwesomeClient({ categories }: { categories: readonly AwesomeCate
       .filter((cat) => cat.items.length > 0);
   }, [categories, q, activeTag]);
 
+  const visibleCount = useMemo(
+    () => filtered.reduce((sum, cat) => sum + cat.items.length, 0),
+    [filtered]
+  );
+
   return (
     <div>
-      {/* Tag filter, the most common tags across all tools */}
-      <div className="mb-3 flex flex-wrap gap-2">
+      <div className="page-filter-bar">
         <CategoryChip
           active={activeTag === null}
           label="All"
@@ -231,7 +121,7 @@ export function AwesomeClient({ categories }: { categories: readonly AwesomeCate
       </div>
 
       {/* Search, a real bordered field with a leading magnifier */}
-      <div className="relative mb-8">
+      <div className="relative mb-6">
         <svg
           className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[color:var(--ink-faded)]"
           fill="none"
@@ -277,20 +167,13 @@ export function AwesomeClient({ categories }: { categories: readonly AwesomeCate
           </button>
         </div>
       ) : (
-        // Flat list, one row per tool. The phase emoji keeps the workflow context.
-        <div className="overflow-hidden rounded-md border border-[color:var(--ink-rule)] bg-[color:var(--paper)]">
-          {filtered.flatMap((cat) => {
-            const group = GROUP_META[groupOf(cat.slug)];
-            return cat.items.map((item) => (
-              <ToolRow
-                key={`${cat.slug}-${item.href}`}
-                item={item}
-                categoryEmoji={group.emoji}
-                categoryTitle={group.title}
-              />
-            ));
-          })}
-        </div>
+        <PageSection label={`${visibleCount} tools`}>
+          <ul className="divide-y divide-[color:var(--ink-rule)]">
+            {filtered.flatMap((cat) =>
+              cat.items.map((item) => <ToolRow key={`${cat.slug}-${item.href}`} item={item} />)
+            )}
+          </ul>
+        </PageSection>
       )}
     </div>
   );

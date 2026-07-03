@@ -34,17 +34,14 @@ export default function FixesPage() {
     <main>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaOrg) }} />
 
-      <div className="page-shell-wide">
+      <div className="page-shell stack-block">
         <PageHeader
           kicker="Build failure database"
           title="Fixes"
           lede={`${fixCount} things that break when you ship solo with AI, and the fix for each. Search before you ask Claude.`}
         />
 
-        {/* The page's one job: search, filter, solve. */}
-        <div className="mt-8">
-          <FixesClient problems={LIST_PROBLEMS} />
-        </div>
+        <FixesClient problems={LIST_PROBLEMS} />
       </div>
     </main>
   );

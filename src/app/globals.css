@@ -924,7 +924,7 @@ html {
   .page-shell-wide {
     margin-inline: auto;
     width: 100%;
-    max-width: 64rem;
+    max-width: 44rem;
     padding-inline: 1.5rem;
     padding-block: 2rem;
   }
@@ -950,6 +950,39 @@ html {
   .stack-section > * + * { margin-top: var(--space-section); }
   .stack-block > * + * { margin-top: var(--space-block); }
   .stack-tight > * + * { margin-top: var(--space-tight); }
+
+  /* Hub page filter chips, same look on Fixes, Articles, Awesome */
+  .page-filter-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    margin-bottom: 1rem;
+  }
+  .filter-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    border-radius: 0.375rem;
+    padding: 0.25rem 0.625rem;
+    font-size: 12.5px;
+    line-height: 1.35;
+    color: var(--ink-soft);
+    transition: background-color 140ms ease, color 140ms ease;
+  }
+  .filter-pill:hover {
+    background-color: var(--sidebar-hover);
+    color: var(--ink);
+  }
+  .filter-pill[aria-pressed="true"],
+  .filter-pill[aria-current="page"] {
+    background-color: var(--sidebar-active);
+    color: var(--ink);
+    font-weight: 500;
+  }
+  .filter-pill__count {
+    color: var(--ink-faded);
+    font-variant-numeric: tabular-nums;
+  }
 
   /* ── Typography additions ─────────────────────────────────────────────
      Fills the gap between .text-headline (19px) and .text-body (14.5px) for

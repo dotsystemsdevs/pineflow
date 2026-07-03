@@ -17,9 +17,9 @@ export default async function TemplatesPage() {
   const counts = await getDownloadCounts();
   return (
     <main>
-      <div className="page-shell-wide">
+      <div className="page-shell stack-block">
         <PageHeader
-          emoji="🗂️"
+          kicker="Drop-in files"
           title="Templates"
           lede={`${TEMPLATE_COUNT} drop-in files for your repo and your AI sessions. Download, then fill in the blanks.`}
         />

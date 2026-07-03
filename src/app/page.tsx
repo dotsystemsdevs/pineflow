@@ -3,7 +3,7 @@ import Image from "next/image";
 import { WORKFLOW_STEPS } from "@/lib/workflow-steps";
 import { getSiteStats } from "@/lib/site-stats";
 import { getRepoContributors } from "@/lib/github-repo-contributors";
-import { SlideCard, SlideHeader, SlideRowItem } from "@/components/layout/slide-ui";
+import { SlideHeader, SlideRowItem, PageSection, IndexRowLink } from "@/components/layout/slide-ui";
 
 const GITHUB_URL = "https://github.com/dotsystemsdevs/vibe-prompt";
 
@@ -38,9 +38,8 @@ export default async function HomePage() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaOrg) }} />
 
-      <SlideCard className="mx-auto max-w-3xl">
-        <div className="px-5 py-8 sm:px-8 sm:py-10">
-          <SlideHeader
+      <div className="page-shell stack-block">
+        <SlideHeader
             partLabel="Open source"
             title="The Vibe Coding Cookbook"
             subtitle="From shower thought to shipped"
@@ -57,34 +56,15 @@ export default async function HomePage() {
             </div>
           </SlideHeader>
 
-          <div className="overflow-hidden rounded-md border border-[color:var(--ink-rule)] bg-[color:var(--paper)]">
-            <div className="border-b border-[color:var(--ink-rule)] bg-[color:var(--paper-soft)] px-4 py-2">
-              <span className="text-label">On the site</span>
-            </div>
+          <PageSection label="On the site">
             <ul className="divide-y divide-[color:var(--ink-rule)]">
               {sections.map((item) => (
                 <SlideRowItem key={item.href}>
-                  <Link
-                    href={item.href}
-                    className="group flex items-center gap-3 px-4 py-3 transition-colors hover:bg-[color:var(--sidebar-hover)]"
-                  >
-                    <span className="text-[14px] font-semibold text-[color:var(--ink)] group-hover:text-[color:var(--accent)]">
-                      {item.label}
-                    </span>
-                    <span className="ml-auto font-mono text-[11px] tabular-nums text-[color:var(--ink-faded)]">
-                      {item.meta}
-                    </span>
-                    <span
-                      aria-hidden
-                      className="shrink-0 text-[color:var(--ink-rule)] transition-transform group-hover:translate-x-0.5 group-hover:text-[color:var(--ink-faded)]"
-                    >
-                      →
-                    </span>
-                  </Link>
+                  <IndexRowLink href={item.href} label={item.label} meta={item.meta} />
                 </SlideRowItem>
               ))}
             </ul>
-          </div>
+          </PageSection>
 
           {shown.length > 0 && (
             <div className="mt-8 flex flex-col gap-3 border-t border-[color:var(--ink-rule)] pt-6 sm:flex-row sm:items-center sm:justify-between">
@@ -121,8 +101,7 @@ export default async function HomePage() {
               </div>
             </div>
           )}
-        </div>
-      </SlideCard>
+      </div>
     </>
   );
 }

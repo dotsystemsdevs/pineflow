@@ -18,22 +18,19 @@ export default async function AwesomePage() {
   const totalItems = AWESOME_CATEGORIES.reduce((sum, cat) => sum + cat.items.length, 0);
 
   return (
-    <div id="top">
-      <div className="page-shell-wide">
-        <PageHeader
-          emoji="🧰"
-          title="Awesome list"
-          lede={
-            <>
-              {totalItems} tools, grouped by where you reach for them in the cookbook.
-              No bloat, no affiliates.
-            </>
-          }
-        />
+    <div id="top" className="page-shell stack-block">
+      <PageHeader
+        kicker="Curated tools"
+        title="Awesome list"
+        lede={
+          <>
+            {totalItems} tools, grouped by where you reach for them in the cookbook.
+            No bloat, no affiliates.
+          </>
+        }
+      />
 
-        {/* Tools, as home-page-style sections */}
-        <AwesomeClient categories={AWESOME_CATEGORIES} />
-      </div>
+      <AwesomeClient categories={AWESOME_CATEGORIES} />
     </div>
   );
 }

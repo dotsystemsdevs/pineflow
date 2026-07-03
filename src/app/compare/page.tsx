@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Reveal } from "@/components/motion/reveal";
 import { PageHeader } from "@/components/layout/page-header";
 
 export const metadata: Metadata = {
@@ -56,24 +55,15 @@ const headCell =
 
 export default function ComparePage() {
   return (
-    <main className="">
-      <div className="page-shell-wide">
-
-        {/* Page header */}
+    <main>
+      <div className="page-shell stack-block">
         <PageHeader
-          icon="compare"
-          accent="orange"
+          kicker="Tools and books"
           title="Compare"
-          lede={
-            <>
-              Everything next to vibeprompt, the tools and the books, on the same axes. vibeprompt is the
-              methodology and prompt library you use <em>with</em> any of them. No affiliate links.
-            </>
-          }
+          lede="Everything next to vibeprompt on the same axes. vibeprompt is the methodology you use with any of them. No affiliate links."
         />
 
-        <Reveal>
-          <div className="mt-10 overflow-x-auto">
+        <div className="overflow-x-auto rounded-md border border-[color:var(--ink-rule)]">
             <table className="w-full min-w-[640px] table-fixed border-collapse text-left">
               <thead>
                 <tr>
@@ -122,7 +112,6 @@ export default function ComparePage() {
               </tbody>
             </table>
           </div>
-        </Reveal>
       </div>
     </main>
   );

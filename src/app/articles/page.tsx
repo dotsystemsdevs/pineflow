@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import Image from "next/image";
 import { PageHeader } from "@/components/layout/page-header";
+import { IndexRowLink, PageSection, SlideRowItem } from "@/components/layout/slide-ui";
 import { getAllArticles, CATEGORIES, CATEGORY_LABEL, type Category } from "@/lib/articles";
 
 export const metadata: Metadata = {
@@ -25,6 +25,10 @@ function parseCategory(raw: string | undefined): Category | null {
   return null;
 }
 
+function formatDate(iso: string) {
+  return new Date(iso).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+}
+
 export default async function ArticlesPage({ searchParams }: ArticlesPageProps) {
   const { cat } = await searchParams;
   const activeCategory = parseCategory(cat);
@@ -37,81 +41,49 @@ export default async function ArticlesPage({ searchParams }: ArticlesPageProps) 
   for (const a of allArticles) counts[a.category]++;
 
   return (
-    <div>
-      <div className="page-shell-wide">
-        <PageHeader
-          emoji="📰"
-          title="Articles"
-          lede="The latest in vibe coding: new apps worth copying, model drops, new tools, and the occasional deep-dive guide. The how-to fixes now live in Fixes."
-        />
+    <div className="page-shell stack-block">
+      <PageHeader
+        kicker="Articles"
+        title="Articles"
+        lede="New apps worth copying, model drops, new tools, and deep-dive guides."
+      />
 
-        {/* Category chip filter, no "All"; clicking the active chip clears it */}
-        <div className="mb-3 flex flex-wrap gap-1">
-          {CATEGORIES.filter((c) => counts[c] > 0).map((c) => (
-            <CategoryChip
-              key={c}
-              href={activeCategory === c ? "/articles" : `/articles?cat=${c}`}
-              active={activeCategory === c}
-              label={CATEGORY_LABEL[c]}
-              count={counts[c]}
-            />
-          ))}
+      <div className="page-filter-bar">
+        {CATEGORIES.filter((c) => counts[c] > 0).map((c) => (
+          <CategoryChip
+            key={c}
+            href={activeCategory === c ? "/articles" : `/articles?cat=${c}`}
+            active={activeCategory === c}
+            label={CATEGORY_LABEL[c]}
+            count={counts[c]}
+          />
+        ))}
+      </div>
+
+      {articles.length === 0 ? (
+        <div className="vp-empty">
+          <p className="vp-empty-title">No articles in this category yet.</p>
+          {activeCategory && (
+            <Link href="/articles" className="btn-ghost mt-3">
+              Clear filter →
+            </Link>
+          )}
         </div>
-
-        {articles.length === 0 ? (
-          <div className="vp-empty mt-4">
-            <p className="vp-empty-title">No articles in this category yet.</p>
-            {activeCategory && (
-              <Link href="/articles" className="btn-ghost mt-3">
-                Clear filter →
-              </Link>
-            )}
-          </div>
-        ) : (
-          <ul className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      ) : (
+        <PageSection label={`${articles.length} articles`}>
+          <ul className="divide-y divide-[color:var(--ink-rule)]">
             {articles.map((article) => (
-              <li key={article.slug}>
-                <Link
+              <SlideRowItem key={article.slug}>
+                <IndexRowLink
                   href={`/articles/${article.slug}`}
-                  className="vp-card-bordered group flex h-full flex-col overflow-hidden hover:border-[color:var(--ink-soft)]"
-                >
-                  <div
-                    className="relative w-full overflow-hidden bg-[color:var(--sidebar-hover)]"
-                    style={{ aspectRatio: "16/9" }}
-                  >
-                    {article.image ? (
-                      <Image
-                        src={article.image}
-                        alt={article.imageAlt}
-                        fill
-                        className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
-                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 360px"
-                      />
-                    ) : (
-                      <div className="flex h-full w-full items-center justify-center emoji-xl" aria-hidden>
-                        📄
-                      </div>
-                    )}
-                  </div>
-                  <div className="flex flex-1 flex-col p-4">
-                    <span className="vp-badge self-start">{CATEGORY_LABEL[article.category]}</span>
-                    <h2 className="text-body mt-2.5 font-medium leading-snug text-[color:var(--ink)] group-hover:underline">
-                      {article.title}
-                    </h2>
-                    <p className="text-meta mt-auto flex items-center gap-2 pt-3 tabular-nums">
-                      <span>
-                        {new Date(article.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
-                      </span>
-                      <span aria-hidden>·</span>
-                      <span>{article.readingMinutes} min</span>
-                    </p>
-                  </div>
-                </Link>
-              </li>
+                  label={article.title}
+                  meta={`${CATEGORY_LABEL[article.category]} · ${formatDate(article.date)} · ${article.readingMinutes} min`}
+                />
+              </SlideRowItem>
             ))}
           </ul>
-        )}
-      </div>
+        </PageSection>
+      )}
     </div>
   );
 }
@@ -131,14 +103,10 @@ function CategoryChip({
     <Link
       href={href}
       aria-current={active ? "page" : undefined}
-      className={`inline-flex items-center gap-1.5 rounded-md px-2.5 py-1 text-meta transition-colors ${
-        active
-          ? "bg-[color:var(--sidebar-active)] text-[color:var(--ink)] font-medium"
-          : "text-[color:var(--ink-soft)] hover:bg-[color:var(--sidebar-hover)] hover:text-[color:var(--ink)]"
-      }`}
+      className="filter-pill"
     >
       <span>{label}</span>
-      <span className="text-[color:var(--ink-faded)] tabular-nums">{count}</span>
+      <span className="filter-pill__count">{count}</span>
     </Link>
   );
 }
