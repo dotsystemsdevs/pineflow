@@ -39,7 +39,11 @@ VIBEPROMPT_ROOT=/path/to/vibe-prompt/prompt-library vibeprompt browse
 
 ```bash
 npm install
+npm run dev -- tui # run the TUI from source (no build step)
 npm run build      # tsup -> dist/
 npm run typecheck  # tsc --noEmit
 npm test           # build + run the CLI/TUI test suite
 ```
+
+> `npm run dev` without the `tui` argument runs the default `browse` command
+> and just prints the category list. Pass `tui` to get the interactive UI.
