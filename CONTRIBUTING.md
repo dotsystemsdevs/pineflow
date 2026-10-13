@@ -16,4 +16,4 @@ Pineflow is one exact path, so every change has to keep it exact.
 - No em dashes.
 - Templates live in `templates/` with their real file names. Keep them in step with the chapter that uses them.
 
-The chapters are also published at [dotsystems.dev/pineflow](https://dotsystems.dev/pineflow), where progress saves in your browser.
+The chapters are also published at [stackpine.app/pineflow](https://stackpine.app/pineflow), where progress saves in your browser.

@@ -2,9 +2,9 @@
 
 **The exact path from an idea to a mobile app in the App Store, with Claude Code doing most of the typing.**
 
-A free, open source workflow in 12 chapters. Every step says what to do, gives you the command or the prompt to paste, and tells you how to check it worked.
+A free, open source workflow in 11 chapters plus a start page. Every step says what to do, gives you the command or the prompt to paste, and tells you how to check it worked.
 
-**Read it with progress tracking:** [dotsystems.dev/pineflow](https://dotsystems.dev/pineflow)
+**Read it with progress tracking:** [stackpine.app/pineflow](https://stackpine.app/pineflow)
 
 ![License](https://img.shields.io/github/license/dotsystemsdevs/pineflow)
 ![Stars](https://img.shields.io/github/stars/dotsystemsdevs/pineflow?style=flat)
@@ -65,7 +65,7 @@ Drop-in files for your repo, each used by a step in the chapters.
 - **Built for App Review.** Privacy, permissions, Sign in with Apple, restore purchases and guideline 4.3 checked before you submit.
 - **Growth is part of the build.** Your channel starts during the Build loop, not after launch.
 
-Written from shipping our own apps under [Stackpine](https://dotsystems.dev): Taperly, Slothy, Crest and Excuse Caddie.
+Written from shipping our own apps under [Stackpine](https://stackpine.app): Taperly, Slothy, Crest and Excuse Caddie.
 
 ## History
 
