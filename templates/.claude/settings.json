@@ -1,0 +1,29 @@
+{
+  "enabledPlugins": {
+    "expo@claude-plugins-official": true
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node -e \"let d='';process.stdin.on('data',c=>d+=c).on('end',()=>{const f=(JSON.parse(d).tool_input||{}).file_path||'';const b=require('path').win32.basename(f);if((b==='.env'||b.startsWith('.env.'))&&b!=='.env.example'){console.error('Blocked: .env holds the secret keys. Ask the user to change it by hand.');process.exit(2)}})\""
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node -e \"let d='';process.stdin.on('data',c=>d+=c).on('end',()=>{if(JSON.parse(d).stop_hook_active)process.exit(0);const x=require('child_process');if(!x.execSync('git status --porcelain').toString().trim())process.exit(0);try{x.execSync('npx tsc --noEmit',{stdio:'pipe'});x.execSync('npm run test --if-present -- --watchAll=false',{stdio:'pipe'})}catch(e){console.error('Checks failed. Fix this before you call the task done:');console.error(String(e.stdout||'')+String(e.stderr||''));process.exit(2)}})\"",
+            "timeout": 300
+          }
+        ]
+      }
+    ]
+  }
+}

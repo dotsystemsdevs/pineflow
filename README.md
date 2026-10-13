@@ -1,188 +1,80 @@
-# vibeprompt
+# Pineflow
 
-Open-source vibe coding cookbook, fix library, prompt collection, and curated tool list for developers shipping with AI. Browse 56 battle-tested prompts, 50 field-tested fixes, 19 articles, and a 10-step playbook from idea to shipped product.
+**The exact path from an idea to a mobile app in the App Store, with Claude Code doing most of the typing.**
 
-[![CI](https://github.com/dotsystemsdevs/vibe-prompt/actions/workflows/ci.yml/badge.svg)](https://github.com/dotsystemsdevs/vibe-prompt/actions/workflows/ci.yml)
-![License](https://img.shields.io/github/license/dotsystemsdevs/vibe-prompt)
-![Stars](https://img.shields.io/github/stars/dotsystemsdevs/vibe-prompt?style=flat)
-![Issues](https://img.shields.io/github/issues/dotsystemsdevs/vibe-prompt?style=flat)
-![PRs](https://img.shields.io/github/issues-pr/dotsystemsdevs/vibe-prompt?style=flat)
+A free, open source workflow in 12 chapters. Every step says what to do, gives you the command or the prompt to paste, and tells you how to check it worked.
 
-**Live**: https://vibeprompt.tech
+**Read it with progress tracking:** [dotsystems.dev/pineflow](https://dotsystems.dev/pineflow)
 
----
+![License](https://img.shields.io/github/license/dotsystemsdevs/pineflow)
+![Stars](https://img.shields.io/github/stars/dotsystemsdevs/pineflow?style=flat)
 
-## Featured on
+## The stack
 
-- [awesome-vibe-coding-resources](https://github.com/acvnace/awesome-vibe-coding-resources) (Documentation for AI Coding)
-- [awesome-vibe-coding](https://github.com/ai-for-developers/awesome-vibe-coding/pull/68) (Project Documentation, PR open)
+One tool per job, so every step can be exact.
 
----
+| Job | Tool |
+| --- | --- |
+| Where you work | VS Code |
+| The AI agent | Claude Code |
+| The app, iPhone and Android | Expo + React Native |
+| Save points | Git and GitHub |
+| Builds and store uploads | EAS |
+| Subscriptions | RevenueCat |
+| Analytics | PostHog |
 
-## What This Is
+## The chapters
 
-vibeprompt is a free, open-source toolkit for developers shipping with AI.
+| | Chapter | What you do |
+| --- | --- | --- |
+| Start | [Start here](chapters/00-start-here.md) | What this workflow is, and how each chapter works. |
+| Set up | [Setup](chapters/01-setup.md) | Seven short steps, from an empty computer to your first app on your phone. |
+| Plan | [Idea and PRD](chapters/02-idea-and-prd.md) | Check that people really have the problem, then write one page that says what you'll build. |
+| Plan | [Tools and rules](chapters/03-tools-and-rules.md) | Write down every tech choice, then give your agent the memory it reads before every session. |
+| Build | [Build loop](chapters/04-build-loop.md) | Build your app one small task at a time: plan it, build it, check it, commit it. |
+| Build | [Paywall](chapters/05-paywall.md) | Decide where you ask for money, what the paywall says and what it costs, then wire it to RevenueCat. |
+| Build | [Onboarding](chapters/06-onboarding.md) | Get a new user from install to the moment your app proves itself, in their first minute. |
+| Build | [Analytics](chapters/07-analytics.md) | Pick an analytics tool, send a handful of events, and see where new users drop off. |
+| Build | [Quality gate](chapters/08-quality-gate.md) | One last check of the whole app before anyone else sees it: ready for App Review, safe and tested. |
+| Ship | [Ship](chapters/09-ship.md) | Open the store accounts, write the store page, test with real people, then ship the real build. |
+| Grow | [Get users](chapters/10-get-users.md) | Bring new users every week from the one place they already hang out. |
+| Grow | [Iterate](chapters/11-iterate.md) | Every week: read what happened, pick one change, ship it, and check if it worked. |
 
-- **Cookbook** , 10-step workflow from environment setup to iterate, with prompts wired into each stage
-- **Fixes** , 50 searchable failure modes (security, deploy, conversion, burnout) with copy-paste recovery prompts
-- **Articles** , 19 long-form posts with receipts from real shipped apps
-- **Awesome** , 100 curated AI coding tools grouped by cookbook stage
-- **Templates** , AGENTS.md, PRD, architecture, and memory-bank starters
-- No login required. No paywall. MIT licensed.
+## Templates
 
----
+Drop-in files for your repo, each used by a step in the chapters.
 
-## Routes
+| File | What it is |
+| --- | --- |
+| [`AGENTS.md`](templates/AGENTS.md) | Your part under Expo's own AGENTS.md: stack, folders, rules, never touch |
+| [`CLAUDE.md`](templates/CLAUDE.md) | One line, `@AGENTS.md` |
+| [`.claude/settings.json`](templates/.claude/settings.json) | Two hooks: blocks edits to `.env`, runs `tsc` and your tests before the agent may call a task done |
+| [`docs/research.md`](templates/docs/research.md) | Kill criteria, searches, complaints, 3 rivals, what you do differently |
+| [`docs/PRD.md`](templates/docs/PRD.md) | User, goal, MVP, out of scope, success |
+| [`docs/TechDesign.md`](templates/docs/TechDesign.md) | One tool per layer: App, Look, Data, Payments, Builds |
+| [`docs/TASKS.md`](templates/docs/TASKS.md) | Small tasks in build order, each with how you check it |
+| [`.gitignore`](templates/.gitignore) | Expo ignores, with `.env` and signing files |
+| [`.env.example`](templates/.env.example) | Which keys go in the app, and why nothing secret is named `EXPO_PUBLIC_` |
+| [`README.md`](templates/README.md), [`CHANGELOG.md`](templates/CHANGELOG.md), [`LICENSE`](templates/LICENSE) | Repo housekeeping |
 
-| Route | What it does |
-|---|---|
-| `/` | Homepage |
-| `/workflow` | 10-step vibe coding cookbook with prompts per stage |
-| `/fixes` | Fix library; `/fixes/[id]` for each failure mode |
-| `/weekly` | Weekly Fix newsletter archive; `/weekly/[slug]` per issue |
-| `/articles` | Article index; `/articles/[slug]` for each post |
-| `/awesome` | Curated list of AI/vibe coding tools |
-| `/templates` | Downloadable AGENTS.md, PRD, and project doc templates |
-| `/compare` | How vibeprompt compares to other resources |
-| `/submit-fix` | Submit a field-tested fix for review |
-| `/about` | About the project |
-| `/faq` | FAQ |
-| `/contact` | Contact |
-| `/privacy` | Privacy policy |
-| `/cookie-policy` | Cookie policy |
+## What makes it different
 
----
+- **Plan before code.** A checked idea, a one-page PRD and a locked stack before the agent writes a line.
+- **Rules the agent can't skip.** AGENTS.md for advice, Claude Code hooks for what must hold every time.
+- **One task at a time.** Plan, build, try it on your phone, read the change, commit.
+- **Built for App Review.** Privacy, permissions, Sign in with Apple, restore purchases and guideline 4.3 checked before you submit.
+- **Growth is part of the build.** Your channel starts during the Build loop, not after launch.
 
-## Project Structure
+Written from shipping our own apps under [Stackpine](https://dotsystems.dev): Taperly, Slothy, Crest and Excuse Caddie.
 
-```text
-vibeprompt/
-├─ src/
-│  ├─ app/                  # Next.js App Router pages
-│  │  ├─ api/               # copy counts, fix submissions, doc generator
-│  │  ├─ workflow/          # Cookbook
-│  │  ├─ fixes/             # Fix library
-│  │  ├─ articles/          # Long-form posts
-│  │  └─ awesome/           # Curated tool list
-│  ├─ components/           # UI and feature components
-│  └─ lib/
-│     ├─ categories.ts      # Slug to folder mappings (protected)
-│     ├─ prompt-library.ts  # Loads prompts from markdown
-│     ├─ workflow-steps.ts  # 10-step workflow metadata
-│     ├─ list-problems.ts   # Fix library entries
-│     ├─ awesome-data.ts    # Curated tool list
-│     └─ types.ts           # Shared types (protected)
-├─ content/articles/        # 19 markdown articles
-├─ prompt-library/          # 56 public prompts (loaded at build time)
-│  ├─ Agent Setup/
-│  ├─ Architecture Stack/
-│  ├─ Build Ship/
-│  ├─ Launch Growth/
-│  ├─ Ops Maintenance/
-│  ├─ PRD Spec/
-│  ├─ Prompting Craft/
-│  ├─ Research Validate/
-│  └─ Testing Quality/
-├─ public/
-│  ├─ templates/            # AGENTS.md, PRD, and related starters
-│  ├─ llms.txt              # AI crawler context file
-│  └─ robots.txt            # Explicit AI bot permissions
-├─ AGENTS.md                # Contributor and agent guide
-└─ CLAUDE.md                # Claude Code project instructions
-```
+## History
 
----
-
-## Tech Stack
-
-| Layer | Technology |
-|---|---|
-| Framework | Next.js 16 (App Router) |
-| UI | React 19, Tailwind CSS v4, shadcn/ui |
-| Auth | None in the product (app is public, no sign-in) |
-| KV storage | Vercel KV (copy counts and related use) |
-| Database | Supabase client present, optional for future features |
-| Animations | GSAP |
-| Analytics | Vercel Analytics |
-| Language | TypeScript (strict) |
-
----
-
-## Getting Started
-
-```bash
-npm install
-npm run dev         # localhost:3000
-npm run lint
-npm run typecheck
-npm run build
-```
-
-Node **20+** (see `package.json` `engines`). Run commands from the repo root.
-
-Environment variables needed in `.env.local`:
-
-```env
-KV_REST_API_URL=
-KV_REST_API_TOKEN=
-# Optional:
-NEXT_PUBLIC_SUPABASE_URL=
-NEXT_PUBLIC_SUPABASE_ANON_KEY=
-```
-
----
-
-## Prompt Library
-
-56 markdown prompts in `prompt-library/`, organized by stage (folder names differ from on-site category labels, see `src/lib/categories.ts`):
-
-| Folder | Site label | What it covers |
-|---|---|---|
-| `Agent Setup/` | Context | AGENTS.md, CLAUDE.md, memory banks |
-| `Research Validate/` | Research | Validation, kill criteria, competitive analysis |
-| `PRD Spec/` | PRD | Requirements, acceptance criteria, scope |
-| `Architecture Stack/` | Stack | Stack decisions, system design |
-| `Build Ship/` | Build | Feature implementation, atomic tasks |
-| `Prompting Craft/` | Prompting | Prompt chains, output control |
-| `Testing Quality/` | Quality | Code review, security, testing |
-| `Launch Growth/` | Ship | Distribution, positioning, launch |
-| `Ops Maintenance/` | Iterate | Post-launch ops and reliability |
-
-Prompts are browsed and copied from the cookbook at `/workflow`, not as standalone pages.
-
-**Adding a prompt**
-
-1. Open `src/lib/categories.ts` and use the `dirName` for the right folder under `prompt-library/`
-2. Add a kebab-case `.md` file that matches the format in [`CONTRIBUTING.md`](./CONTRIBUTING.md)
-3. Open a PR, for example: `prompt(category): add your-prompt-name`
-
----
-
-## Roadmap
-
-**Done**
-
-- 56 prompts, 50 fixes, 19 articles, 100 awesome tools, 10-step cookbook, templates, public access with no login
-
-**Next (see also [ROADMAP.md](./ROADMAP.md) and [Issues](https://github.com/dotsystemsdevs/vibe-prompt/issues))**
-
-- Community prompts and content (open issues: labels `content`, `good first issue`)
-- Hardening copy counts and any infra follow-ups
-- Ongoing quality: search, redirects (for example `www` to apex), docs
-
----
+Pineflow started as **vibeprompt**, a prompt library and a 10-step workflow for vibe coders. That site, its 56 prompts, the fix library and the CLI live on in the [`vibeprompt-site`](https://github.com/dotsystemsdevs/pineflow/tree/vibeprompt-site) branch. Thanks to everyone who contributed there: [@sjusjdkzhsiqjqbz-rgb](https://github.com/sjusjdkzhsiqjqbz-rgb), [@Renaud972](https://github.com/Renaud972) and [@LyraCS](https://github.com/LyraCS).
 
 ## Contributing
 
-For people: start with [`CONTRIBUTING.md`](./CONTRIBUTING.md). For agents and full stack detail: `AGENTS.md`.
-
-- **Quick contribution**: copy fix, UI, mobile, add a prompt, add a tool, article tweak
-- **Roadmap**: [`ROADMAP.md`](./ROADMAP.md)
-- **Issues**: https://github.com/dotsystemsdevs/vibe-prompt/issues
-- **PRs**: https://github.com/dotsystemsdevs/vibe-prompt/pulls
-
----
+Something failed, a link died or a tool changed? See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## License
 
-MIT, see [LICENSE](./LICENSE)
+MIT

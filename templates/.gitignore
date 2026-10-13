@@ -1,0 +1,34 @@
+# Expo
+node_modules/
+.expo/
+dist/
+web-build/
+expo-env.d.ts
+
+# Native folders, made by prebuild and EAS
+/ios
+/android
+
+# Builds and signing
+*.ipa
+*.apk
+*.aab
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.pem
+
+# Secrets, never commit them
+.env
+.env*.local
+
+# Logs and tests
+npm-debug.log*
+yarn-error.log*
+coverage/
+
+# OS
+.DS_Store
+Thumbs.db
