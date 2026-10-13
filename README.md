@@ -6,6 +6,17 @@ A free, open source workflow in 11 chapters plus a start page. Every step says w
 
 **Read it with progress tracking:** [stackpine.app/pineflow](https://stackpine.app/pineflow)
 
+## Quick start
+
+1. Open [Start here](chapters/00-start-here.md) and go chapter by chapter. Every step ends with what you see when it worked.
+2. Grab the templates when a step asks for them, or all at once:
+
+   ```bash
+   npx degit dotsystemsdevs/pineflow/templates pineflow-templates
+   ```
+
+3. Already have an Expo app? Start at [Tools and rules](chapters/03-tools-and-rules.md).
+
 ![License](https://img.shields.io/github/license/dotsystemsdevs/pineflow)
 ![Stars](https://img.shields.io/github/stars/dotsystemsdevs/pineflow?style=flat)
 
@@ -74,6 +85,8 @@ Pineflow started as **vibeprompt**, a prompt library and a 10-step workflow for 
 ## Contributing
 
 Something failed, a link died or a tool changed? See [CONTRIBUTING.md](CONTRIBUTING.md).
+
+If Pineflow helped you ship, a star helps the next person find it.
 
 ## License
 

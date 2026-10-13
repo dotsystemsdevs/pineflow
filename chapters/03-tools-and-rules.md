@@ -163,7 +163,7 @@ Learn more:
 
 _Rules the agent can't forget, however long the session._
 
-1. **Download settings.json** below and let it replace the one in your project's `.claude` folder: `.claude/settings.json`. Ours keeps Expo's plugin line and adds the two hooks.
+1. **Copy [settings.json](../templates/.claude/settings.json)** from the templates and let it replace the one in your project's `.claude` folder: `.claude/settings.json`. Ours keeps Expo's plugin line and adds the two hooks.
 
 2. **Start a new Claude Code session** so it loads the hooks, then type `/hooks`.
 

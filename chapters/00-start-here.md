@@ -42,12 +42,12 @@ We picked one tool for each job, so every step can be exact. Prefer other tools?
 ## How it works
 
 - You don't need to code. Setup starts from zero, one tool at a time, and the AI does the typing.
-- It's free, with no account. Tick tasks as you go: progress saves in this browser.
+- It's free, with no account. Read it here on GitHub, or on [stackpine.app/pineflow](https://stackpine.app/pineflow), where you can tick tasks and progress saves in your browser.
 - Six parts: start, set up, plan, build, ship, grow. Already have a stack? Jump to Tools and rules.
 - Every task is part of building your real app, not practice you redo later. We use VS Code and Claude Code throughout.
 
 - **Vibe coding:** Building software by telling an AI what you want in plain words, instead of writing the code yourself.
-- **Where the name comes from:** Andrej Karpathy, an AI researcher and OpenAI co-founder, named it in the post at the top of this page: you give in to the vibes and forget the code even exists.
+- **Where the name comes from:** Andrej Karpathy, an AI researcher and OpenAI co-founder, named it in [a post on X](https://x.com/karpathy/status/1886192184808149383): you give in to the vibes and forget the code even exists.
 - **Why vibes:** You steer by feel, not by reading code: see it, say what to change, run it, paste the error back in.
 - **What we do differently:** Karpathy called it fine for throwaway weekend projects. An app people pay for needs a plan, save points in Git and a look at what the agent changed. That's what this workflow adds.
 

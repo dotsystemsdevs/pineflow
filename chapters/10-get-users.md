@@ -82,7 +82,7 @@ Learn more:
 - [Canva](https://www.canva.com): Make the slides.
 - [CapCut](https://www.capcut.com): Turn slides into a video for Reels and Shorts.
 
-**Want our exact TikTok system?** The hook formats, the winner and trend mix, post times and the templates behind 1M+ views on our own accounts. We are writing it up as a playbook. [Get notified when it is out](mailto:dot.systems@proton.me?subject=Notify%20me%3A%20TikTok%20playbook)
+**Want our exact TikTok system?** The hook formats, the winner and trend mix, post times and the templates behind 1M+ views on our own accounts. We are writing it up as a playbook. [Get notified when it is out](mailto:hello@stackpine.app?subject=Notify%20me%3A%20TikTok%20playbook)
 
 ## Instagram
 
