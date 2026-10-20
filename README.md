@@ -8,7 +8,7 @@ Open-source vibe coding cookbook, fix library, prompt collection, and curated to
 ![Issues](https://img.shields.io/github/issues/dotsystemsdevs/vibe-prompt?style=flat)
 ![PRs](https://img.shields.io/github/issues-pr/dotsystemsdevs/vibe-prompt?style=flat)
 
-**Live**: https://vibeprompt.tech
+**Live**: https://stackpine.app/pineflow
 
 ---
 
